@@ -11,10 +11,12 @@
     "noImplicitAny": false,
     "diagnostics": true,
     "outDir": "release",
-    "noEmit": false
+    "noEmit": false,
+    "jsx": "react"
   },
   "exclude": [
     "node_modules/typescript/lib/lib.core.d.ts",
-    "node_modules/typescript/lib/lib.core.es6.d.ts"
+    "node_modules/typescript/lib/lib.core.es6.d.ts",
+    "node_modules"
   ]
 }
