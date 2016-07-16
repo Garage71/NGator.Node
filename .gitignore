@@ -1,0 +1,5 @@
+node_modules/
+obj/
+.vs/
+.idea/
+bin/Microsoft.NodejsTools.WebRole.dll
