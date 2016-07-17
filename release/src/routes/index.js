@@ -1,8 +1,19 @@
-var express = require('express');
-var router = express.Router();
+/// <reference path="../../typings/index.d.ts" />
+/**
+ * Main application router
+ */
+'use strict';
+const rssService = require('../services/services.rsssources');
+const express = require('express');
+let router = express.Router();
+let rss = new rssService.RssSources();
 /* GET home page. */
-router.get('/', function (req, res, next) {
+router.get('/', (req, res, next) => {
     res.render('../views/index', { title: 'Express' });
 });
-module.exports = router;
+router.get('/api/sources', (req, res, next) => {
+    res.status(200).json(rss.getRssSources());
+});
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = router;
 //# sourceMappingURL=index.js.map

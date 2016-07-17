@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../src/app');
+var app = require('../release/app').default;
 var debug = require('debug')('NGator.Node:server');
 var http = require('http');
 

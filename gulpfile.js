@@ -1,3 +1,4 @@
+/// <binding />
 'use strict';
 
 var gulp = require('gulp'),
@@ -16,7 +17,7 @@ var config = new Config();
 
 var tslintOptions = {
     rulesDirectory: 'node_modules/tslint-microsoft-contrib',
-    formatter: 'verbose',
+    formatter: 'msbuild',
     emitError: false
 }; 
 
