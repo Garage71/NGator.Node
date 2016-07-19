@@ -10,7 +10,7 @@
     "removeComments": false,
     "noImplicitAny": false,
     "diagnostics": true,
-    "outDir": "release",
+    "outDir": "build",
     "jsx": "react",
     "noEmitOnError" : true
   },

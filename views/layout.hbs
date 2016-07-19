@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html ng-app="ngatorApp">
+<html data-ng-app="app">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,17 +9,21 @@
     <link href="/bower/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/bower/bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet" />
     <script src="/bower/angular/angular.min.js"></script>
+    <script src="/bower/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="/bower/angular-resource/angular-resource.min.js"></script>
     <script src="/bower/angular-animate/angular-animate.min.js"></script>
     <script src="/bower/angular-ui/build/angular-ui.min.js"></script>
-    <script src="/bower/select/dist/select.js"></script>
-    <link href="/stylesheets/chosen.min.css" rel="stylesheet" />
-    <link href="/stylesheets/select.min.css" rel="stylesheet" />
+    <script src="/bower/angular-ui-select/dist/select.min.js"></script>
+    <script src="/bower/angular-route/angular-route.min.js"></script>            
+    <link href="/bower/angular-ui-select/dist/select.min.css" rel="stylesheet" />
     <link href="/stylesheets/Site.css" rel="stylesheet" />
     <link href="/stylesheets/ui-bootstrap-csp.css" rel="stylesheet" />
-    <script src="/js/app.js"></script>
+    <script src="/app/app.js"></script>
+    <script src="/app/route-config.js"></script>
+    <script src="/app/rsssources.js"></script>
+    <script src="/app/modal.js"></script>
 </head>
-<body ng-controller="RssSourcesController">
+<body ng-controller="RssSourcesController as vm">    
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -29,17 +33,17 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/" style="vertical-align: central;">NGator.NODE: News aggregator</a>                
+                <a class="navbar-brand" href="/" style="vertical-align: central;">NGator.NODE: News aggregator</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <form class="navbar-form navbar-right">
-                    <ui-select multiple ng-model="selectedSources.selected" theme="bootstrap" close-on-select="false" style="width: 500px">
-                        <ui-select-match placeholder="ВЫберите источники:">{{$item}}</ui-select-match>
-                        <ui-select-choices repeat="src in sources">
-                            {{src}}
+                    <ui-select multiple ng-model="vm.selectedSources" theme="bootstrap" close-on-select="false" style="width: 500px">
+                        <ui-select-match placeholder="Select sources:">\{{$item.name}}</ui-select-match>
+                        <ui-select-choices repeat="src in vm.sources">
+                            <div ng-bind-html="src.name"></div>                            
                         </ui-select-choices>
                     </ui-select>
-                    <button type="submit" ng-disabled="selectedSources.selected.length === 0 || !loadButtonEnabled" ng-click="getNews()" class="btn btn-primary">Загрузить новости</button>
+                    <button type="submit" ng-disabled="vm.selectedSources.length === 0 || !vm.loadButtonEnabled" ng-click="vm.getNews()" class="btn btn-primary">Load news</button>
                 </form>
             </div>
         </div>
@@ -47,10 +51,10 @@
     <div class="container body-content">
         {{{body}}}
         <footer>
-            <pagination ng-show="newsList.length > 0" total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()" num-pages="numPages"></pagination>
+            <pagination ng-show="vm.newsList.length > 0" total-items="totalItems" ng-model="vm.currentPage" max-size="maxSize" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()" num-pages="numPages"></pagination>
             <hr />
             <small><a href="https://github.com/garage71" target="_blank">&copy; 2016, Garage71</a></small>
         </footer>
-    </div>    
+    </div>
 </body>
 </html>
