@@ -10,6 +10,7 @@ module app {
     export class RssSourcesController {
         static $inject = ['$http'];
         sources: si.IRSSSource[] = [];
+        newsHeaders: si.INewsHeader[] = [];
         newsList = [];
         loadButtonEnabled = true;
         selectedSources: si.IRSSSource[] = [];
@@ -22,48 +23,24 @@ module app {
         }
 
         getNews(): void {
-            console.log(this.selectedSources);
-        }
-        /*
-        $scope.newsList = [];
-        $scope.modalScope = $scope.$new();
-        $scope.modal = $controller("ModalController", { $scope: $scope.modalScope });
+            let sources: si.IRSSSource[] = [];
+            let request: si.IRSSSources = {
+                rsssources: sources
+            };
+            for (let source of this.selectedSources) {
+                sources.push(source);
+            }
+            this.$http.post('/api/sources', request).then((response: any) => {
+                let container = response.data as si.INewsHeaders;
+                this.newsHeaders = container.newsHeaders;
+            });
+        }      
+    }
 
-        var response = $http.get("/api/sources");
-    response.success(function (data, status, headers, config) {
-
-        data.sources.forEach(function (src) {
-            $scope.sources.push(src.siteName);
-        });
-
-    }).error(function (data, status, headers, config) {
-        console.log("Error occuted during sources loading:" + status);
-    });
-
-    $scope.loadButtonEnabled = true;
-    $scope.selectedSources = {};
-    $scope.selectedSources.selected = ["Lenta.ru"];
-
-    $scope.maxSize = 10;
-    $scope.totalItems = 375;
-    $scope.currentPage = 1;
-
-    $scope.sourcesRequest = {
-        "page": $scope.currentPage,
-        "sources": [],
-        "refresh": true
-    };
-
-    $scope.setPage = function (pageNo) {
-        $scope.currentPage = pageNo;
-    };
-
-    $scope.pageChanged = function () {
-        $scope.sourcesRequest.page = $scope.currentPage;
-        $scope.sourcesRequest.refresh = false;
-        $scope.obtainArticles($scope.sourcesRequest);
-    };
-    */
-    }   
-    angular.module('app').controller('RssSourcesController', RssSourcesController);
+    angular.module('app')
+        .controller('RssSourcesController',
+        [
+            '$http', ($http: ng.IHttpService) => {
+                return new RssSourcesController($http);
+            }]);
 }

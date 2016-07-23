@@ -2,7 +2,7 @@
 'user strict';
 angular.module('app', ['ngRoute', 'ui.select', 'ngSanitize'])
     .config([
-    '$routeProvider', ($routeProvider) => {
+    '$routeProvider', function ($routeProvider) {
         $routeProvider.otherwise({ redirectTo: '/' });
     }
 ]);

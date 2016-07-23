@@ -8,6 +8,7 @@ var app;
         constructor($http) {
             this.$http = $http;
             this.sources = [];
+            this.newsHeaders = [];
             this.newsList = [];
             this.loadButtonEnabled = true;
             this.selectedSources = [];
@@ -18,11 +19,25 @@ var app;
             });
         }
         getNews() {
-            console.log(this.selectedSources);
+            let sources = [];
+            let request = {
+                rsssources: sources
+            };
+            for (let source of this.selectedSources) {
+                sources.push(source);
+            }
+            this.$http.post('/api/sources', request).then((response) => {
+                let container = response.data;
+                this.newsHeaders = container.newsHeaders;
+            });
         }
     }
     RssSourcesController.$inject = ['$http'];
     app.RssSourcesController = RssSourcesController;
-    angular.module('app').controller('RssSourcesController', RssSourcesController);
+    angular.module('app')
+        .controller('RssSourcesController', [
+        '$http', ($http) => {
+            return new RssSourcesController($http);
+        }]);
 })(app || (app = {}));
 //# sourceMappingURL=rsssources.js.map

@@ -1,10 +1,10 @@
 var app;
 (function (app) {
     'use strict';
-    let config = ($routeProvider) => {
+    var config = function ($routeProvider) {
         $routeProvider
             .when('/', {
-            templateUrl: () => { },
+            templateUrl: function () { },
             controller: 'RssSourcesController',
             controllerAs: 'vm'
         });

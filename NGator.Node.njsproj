@@ -516,7 +516,9 @@
     <Content Include="typings\globals\mime\typings.json" />
     <Content Include="typings\globals\morgan\typings.json" />
     <Content Include="typings\globals\nconf\typings.json" />
+    <Content Include="typings\globals\node-uuid\typings.json" />
     <Content Include="typings\globals\node\typings.json" />
+    <Content Include="typings\modules\request\typings.json" />
     <Content Include="views\index.hbs" />
     <Content Include="views\layout.hbs" />
     <TypeScriptCompile Include="public\app\app.ts" />
@@ -525,6 +527,7 @@
     <TypeScriptCompile Include="public\app\rsssources.ts" />
     <TypeScriptCompile Include="src\app.ts" />
     <TypeScriptCompile Include="src\routes\index.ts" />
+    <TypeScriptCompile Include="src\services\services.newsprovider.ts" />
     <TypeScriptCompile Include="src\services\services.rsssources.ts" />
     <TypeScriptCompile Include="src\shared\interfaces.ts" />
     <TypeScriptCompile Include="typings\globals\angular\index.d.ts" />
@@ -535,6 +538,10 @@
     <TypeScriptCompile Include="typings\globals\mime\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\morgan\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\nconf\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\node-uuid\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\node-uuid\node-uuid-base.d.ts" />
+    <TypeScriptCompile Include="typings\globals\node-uuid\node-uuid-cjs.d.ts" />
+    <TypeScriptCompile Include="typings\globals\node-uuid\node-uuid-global.d.ts" />
     <TypeScriptCompile Include="typings\globals\node\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\serve-static\index.d.ts" />
     <TypeScriptCompile Include="typings\index.d.ts" />
@@ -544,6 +551,7 @@
     <Content Include="public\stylesheets\style.css" />
     <Content Include="typings\globals\express\typings.json" />
     <TypeScriptCompile Include="typings\globals\express\index.d.ts" />
+    <TypeScriptCompile Include="typings\modules\request\index.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin" />
@@ -696,8 +704,11 @@
     <Folder Include="typings\globals\mime\" />
     <Folder Include="typings\globals\morgan\" />
     <Folder Include="typings\globals\nconf\" />
+    <Folder Include="typings\globals\node-uuid\" />
     <Folder Include="typings\globals\node\" />
     <Folder Include="typings\globals\serve-static\" />
+    <Folder Include="typings\modules\" />
+    <Folder Include="typings\modules\request\" />
     <Folder Include="views" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
