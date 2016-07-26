@@ -5,6 +5,7 @@
 export interface IRSSSource {
     name: string;
     url: string;
+    picture: Buffer;
 }
 
 export interface IRSSSources {
@@ -16,8 +17,8 @@ export interface INewsHeader {
     link: string;
     description: string;
     publishDate: Date;
-    guid: string;
-    enclosure: number[];
+    uuid: string;
+    enclosure: Buffer;
     source: string;
     hasLogo: boolean;
     hasEnclosure: boolean;
@@ -26,4 +27,16 @@ export interface INewsHeader {
 export interface INewsHeaders {
     totalArticlesCount: number;
     newsHeaders: INewsHeader[];
+}
+
+export interface IArticleContainer {    
+    uuid: string;        
+    rssSource: IRSSSource;        
+    header: INewsHeader;        
+    body: IBodyContainer;
+}
+
+export interface IBodyContainer {    
+    body: string;        
+    hasPicture: boolean;
 }

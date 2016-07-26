@@ -1,30 +1,29 @@
-﻿
 /**
 * Rss news list provider
 */
-
-import * as http from 'http';
-import * as https from 'https';
-import * as si from '../shared/interfaces';
-import * as request from 'request';
+"use strict";
+const request = require('request');
 let feedParser = require('feedparser');
-import * as UUID from 'node-uuid';
-
-export class NewsProvider {
-    getNews(sources: si.IRSSSource[], page: number, refresh: boolean): void {
+const UUID = require('node-uuid');
+const contentStorage = require('./contentstorage');
+class NewsProvider {
+    constructor() {
+        this.contentStorage = new contentStorage.ContentStorage();
+    }
+    getNews(sources, page, refresh) {
         let parser = new feedParser();
         for (let source of sources) {
-            let req = request(source.url);            
-            parser.on('error', (error: any)  => {
+            let req = request(source.url);
+            parser.on('error', (error) => {
                 console.log('FeedParser error: ' + error);
             });
             parser.on('readable', () => {
                 let stream = parser;
                 let meta = stream.meta;
-                let item: any;
+                let item;
                 console.log(meta);
                 while (item = stream.read()) {
-                    let newsHeader: si.INewsHeader = {
+                    let newsHeader = {
                         source: item.source,
                         description: item.description,
                         enclosure: item.enclosure,
@@ -41,27 +40,19 @@ export class NewsProvider {
             req.on('error', (err) => {
                 console.log(err);
             });
-            req.on('response', (response: http.IncomingMessage) => {
-
+            req.on('response', (response) => {
                 if (response.statusCode !== 200) {
                     console.log(`RSS Server responded invalid status code: ${response.statusCode}`);
                     return;
                 }
                 response.pipe(parser);
             });
-            
-            /*
-            request.get(source.url, (error:any, response: http.IncomingMessage, body: any) => {
-                if (!error && response.statusCode === 200) {
-                    console.log(body); // Show the HTML for the Google homepage.
-
-                } else {
-                    console.log(error);
-                }
-            });
-            */
-        };
+        }
+        ;
     }
 }
+exports.NewsProvider = NewsProvider;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = NewsProvider;
 
-export default NewsProvider;
+//# sourceMappingURL=newsprovider.js.map

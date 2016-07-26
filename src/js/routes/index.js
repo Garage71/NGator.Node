@@ -3,9 +3,10 @@
  * Main application router
  */
 'use strict';
-const rssService = require('../services/services.rsssources');
+const rssService = require('../services/rsssources');
 const express = require('express');
-const newsProvider = require('../services/services.newsprovider');
+const newsProvider = require('../services/newsprovider');
+/// todo: implement Dependency Injection
 let router = express.Router();
 let rss = new rssService.RssSources();
 let news = new newsProvider.NewsProvider();

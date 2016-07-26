@@ -527,8 +527,9 @@
     <TypeScriptCompile Include="public\app\rsssources.ts" />
     <TypeScriptCompile Include="src\app.ts" />
     <TypeScriptCompile Include="src\routes\index.ts" />
-    <TypeScriptCompile Include="src\services\services.newsprovider.ts" />
-    <TypeScriptCompile Include="src\services\services.rsssources.ts" />
+    <TypeScriptCompile Include="src\services\contentstorage.ts" />
+    <TypeScriptCompile Include="src\services\newsprovider.ts" />
+    <TypeScriptCompile Include="src\services\rsssources.ts" />
     <TypeScriptCompile Include="src\shared\interfaces.ts" />
     <TypeScriptCompile Include="typings\globals\angular\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\body-parser\index.d.ts" />
