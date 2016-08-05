@@ -5,7 +5,7 @@
 export interface IRSSSource {
     name: string;
     url: string;
-    picture: Buffer;
+    hasLogo: boolean;
 }
 
 export interface IRSSSources {
@@ -17,8 +17,7 @@ export interface INewsHeader {
     link: string;
     description: string;
     publishDate: Date;
-    uuid: string;
-    enclosure: Buffer;
+    uuid: string;    
     source: string;
     hasLogo: boolean;
     hasEnclosure: boolean;

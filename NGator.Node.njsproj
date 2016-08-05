@@ -518,6 +518,8 @@
     <Content Include="typings\globals\nconf\typings.json" />
     <Content Include="typings\globals\node-uuid\typings.json" />
     <Content Include="typings\globals\node\typings.json" />
+    <Content Include="typings\globals\sax\typings.json" />
+    <Content Include="typings\globals\underscore\typings.json" />
     <Content Include="typings\modules\request\typings.json" />
     <Content Include="views\index.hbs" />
     <Content Include="views\layout.hbs" />
@@ -527,8 +529,10 @@
     <TypeScriptCompile Include="public\app\rsssources.ts" />
     <TypeScriptCompile Include="src\app.ts" />
     <TypeScriptCompile Include="src\routes\index.ts" />
+    <TypeScriptCompile Include="src\services\binaryprovider.ts" />
     <TypeScriptCompile Include="src\services\contentstorage.ts" />
     <TypeScriptCompile Include="src\services\newsprovider.ts" />
+    <TypeScriptCompile Include="src\services\rssparser.ts" />
     <TypeScriptCompile Include="src\services\rsssources.ts" />
     <TypeScriptCompile Include="src\shared\interfaces.ts" />
     <TypeScriptCompile Include="typings\globals\angular\index.d.ts" />
@@ -544,7 +548,9 @@
     <TypeScriptCompile Include="typings\globals\node-uuid\node-uuid-cjs.d.ts" />
     <TypeScriptCompile Include="typings\globals\node-uuid\node-uuid-global.d.ts" />
     <TypeScriptCompile Include="typings\globals\node\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\sax\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\serve-static\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\underscore\index.d.ts" />
     <TypeScriptCompile Include="typings\index.d.ts" />
     <Content Include="typings\globals\express-serve-static-core\typings.json" />
     <Content Include="typings\globals\serve-static\typings.json" />
@@ -707,7 +713,9 @@
     <Folder Include="typings\globals\nconf\" />
     <Folder Include="typings\globals\node-uuid\" />
     <Folder Include="typings\globals\node\" />
+    <Folder Include="typings\globals\sax\" />
     <Folder Include="typings\globals\serve-static\" />
+    <Folder Include="typings\globals\underscore\" />
     <Folder Include="typings\modules\" />
     <Folder Include="typings\modules\request\" />
     <Folder Include="views" />

@@ -11,19 +11,7 @@
     {
       "name": "Regnum",
       "url": "http://regnum.ru/rss/"
-    },
-    {
-      "name": "RIA World",
-      "url": "http://ria.ru/export/rss2/world/index.xml"
-    },
-    {
-      "name": "RIA Economics",
-      "url": "http://ria.ru/export/rss2/economy/index.xml"
-    },
-    {
-      "name": "RIA Politics",
-      "url": "http://ria.ru/export/rss2/politics/index.xml"
-    },
+    },    
     {
       "name": "News.rambler.ru",
       "url": "http://news.rambler.ru/rss/head/"

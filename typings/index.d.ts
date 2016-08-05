@@ -11,5 +11,7 @@
 /// <reference path="globals/node-uuid/node-uuid-base.d.ts" />
 /// <reference path="globals/node-uuid/node-uuid-global.d.ts" />
 /// <reference path="globals/node/index.d.ts" />
+/// <reference path="globals/sax/index.d.ts" />
 /// <reference path="globals/serve-static/index.d.ts" />
+/// <reference path="globals/underscore/index.d.ts" />
 /// <reference path="modules/request/index.d.ts" />

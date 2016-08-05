@@ -3,80 +3,80 @@
 */
 "use strict";
 const request = require('request');
-let feedParser = require('feedparser');
-const UUID = require('node-uuid');
 const contentStorage = require('./contentstorage');
+const rssParser = require('./rssparser');
 class NewsProvider {
     constructor() {
         this.cs = new contentStorage.ContentStorage();
+        this.PageSize = 10;
     }
-    getNews(sources, page, refresh) {
-        let result = [];
+    getNews(sources, page, refresh, callBack) {
+        let feed = new Map();
+        sources.forEach(src => feed.set(src, {
+            sourceFeed: [],
+            isLoaded: false
+        }));
         if (!refresh) {
             for (let src of sources) {
-                let headers = this.cs.getArticlesBySource(src).map(article => article.header);
-                headers.forEach(header => result.push(header));
-                return result;
+                let headers = this.cs.getArticlesBySource(src).map(article => article.header).sort(this.sorter);
+                callBack(headers.slice((page - 1) * this.PageSize, page * this.PageSize), headers.length);
             }
         }
-        let parser = new feedParser();
         for (let source of sources) {
-            let req = request(source.url);
-            parser.on('error', (error) => {
-                console.log('FeedParser error: ' + error);
-            });
-            parser.on('readable', () => {
-                let stream = parser;
-                let meta = stream.meta;
-                if (!source.picture) {
-                    if (meta.image && meta.image.url) {
-                        let picreq = request(meta.image.url);
-                        picreq.on('data', (data) => {
-                            source.picture = data;
-                        });
+            let result = [];
+            let req = request(source.url, (err, resp, data) => {
+                let parser = new rssParser.RssParser((headers) => {
+                    for (let header of headers) {
+                        header.source = source.name;
+                        let body = {
+                            body: '',
+                            hasPicture: header.hasEnclosure
+                        };
+                        let article = {
+                            uuid: header.uuid,
+                            rssSource: source,
+                            header: header,
+                            body: body
+                        };
+                        this.cs.saveArticle(article);
+                        result.push(header);
+                    }
+                    feed.set(source, {
+                        sourceFeed: result,
+                        isLoaded: true
+                    });
+                });
+                parser.parse(data, source);
+                let isCompleted = true;
+                let finalFeed = [];
+                for (let src of feed) {
+                    let sourceFeed = src['1'];
+                    if (!sourceFeed.isLoaded) {
+                        isCompleted = false;
+                    }
+                    else {
+                        for (let header of sourceFeed.sourceFeed) {
+                            finalFeed.push(header);
+                        }
                     }
                 }
-                let item;
-                console.log(meta);
-                while (item = stream.read()) {
-                    let newsHeader = {
-                        source: item.source,
-                        description: item.description,
-                        enclosure: item.enclosure,
-                        hasEnclosure: item.enclosure ? true : false,
-                        hasLogo: source.picture ? true : false,
-                        link: item.link,
-                        publishDate: item.publishDate,
-                        title: item.title,
-                        uuid: UUID.v4()
-                    };
-                    let body = {
-                        body: '',
-                        hasPicture: newsHeader.hasEnclosure
-                    };
-                    let article = {
-                        uuid: newsHeader.uuid,
-                        rssSource: source,
-                        header: newsHeader,
-                        body: body
-                    };
-                    this.cs.saveArticle(article);
-                    result.push(newsHeader);
+                if (isCompleted) {
+                    finalFeed = finalFeed.sort(this.sorter);
+                    let sliced = finalFeed.slice(0, this.PageSize);
+                    let totalCount = finalFeed.length;
+                    callBack(sliced, totalCount);
                 }
-                return result;
-            });
-            req.on('error', (err) => {
-                console.log(err);
-            });
-            req.on('response', (response) => {
-                if (response.statusCode !== 200) {
-                    console.log(`RSS Server responded invalid status code: ${response.statusCode}`);
-                    return;
-                }
-                response.pipe(parser);
             });
         }
-        ;
+    }
+    sorter(h1, h2) {
+        if (h1.publishDate < h2.publishDate) {
+            return 1;
+        }
+        else if (h1.publishDate > h2.publishDate) {
+            return -1;
+        }
+        return 0;
     }
 }
 exports.NewsProvider = NewsProvider;

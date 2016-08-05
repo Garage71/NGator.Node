@@ -4,9 +4,10 @@
 
 'use strict';
 import * as rssService from '../services/rsssources';
-import * as shared from '../shared/interfaces';
+import * as si from '../shared/interfaces';
 import * as express from 'express';
 import * as newsProvider from '../services/newsprovider';
+
 
 /// todo: implement Dependency Injection
 let router = express.Router();
@@ -24,9 +25,14 @@ router.get('/api/sources',
         res.status(200).json(rss.getRssSources());
     });
 
-router.post('/api/sources', (req, res, next) => {
-    let newsHeaders = news.getNews(req.body.rsssources, 1, true);
-    res.status(200).json(newsHeaders);
+router.post('/api/sources', (req, res, next) => {    
+    news.getNews(req.body.rsssources, 1, true, (newsFeed: si.INewsHeader[], totalCount: number) => {
+        let result: si.INewsHeaders = {
+            newsHeaders: newsFeed,
+            totalArticlesCount: totalCount
+        };
+        res.status(200).json(result);
+    });    
 });
 
 export default router;

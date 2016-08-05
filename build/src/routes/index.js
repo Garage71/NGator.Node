@@ -17,8 +17,13 @@ router.get('/api/sources', (req, res, next) => {
     res.status(200).json(rss.getRssSources());
 });
 router.post('/api/sources', (req, res, next) => {
-    let newsHeaders = news.getNews(req.body.rsssources, 1, true);
-    res.status(200).json(newsHeaders);
+    news.getNews(req.body.rsssources, 1, true, (newsFeed, totalCount) => {
+        let result = {
+            newsHeaders: newsFeed,
+            totalArticlesCount: totalCount
+        };
+        res.status(200).json(result);
+    });
 });
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = router;

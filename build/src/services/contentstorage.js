@@ -9,7 +9,15 @@ class ContentStorage {
         ContentStorage.urlToUuidMap[article.header.link] = article.uuid;
         return true;
     }
-    getArticleByGuid(uuid) {
+    saveEnclosure(uuid, enclosure) {
+        ContentStorage.enclosureStorage[uuid] = enclosure;
+        return true;
+    }
+    saveLogo(sourceName, logo) {
+        ContentStorage.enclosureStorage[sourceName] = logo;
+        return true;
+    }
+    getArticleByUuid(uuid) {
         if (ContentStorage.articleStorage.has(uuid)) {
             return ContentStorage.articleStorage[uuid];
         }
@@ -31,9 +39,23 @@ class ContentStorage {
         }
         return null;
     }
+    getEnclosureByUuid(uuid) {
+        if (ContentStorage.enclosureStorage.has(uuid)) {
+            return ContentStorage.enclosureStorage[uuid];
+        }
+        return null;
+    }
+    getLogo(sourceName) {
+        if (ContentStorage.logoStorage.has(sourceName)) {
+            return ContentStorage.logoStorage[sourceName];
+        }
+        return null;
+    }
 }
 ContentStorage.articleStorage = new Map();
 ContentStorage.urlToUuidMap = new Map();
+ContentStorage.enclosureStorage = new Map();
+ContentStorage.logoStorage = new Map();
 exports.ContentStorage = ContentStorage;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ContentStorage;

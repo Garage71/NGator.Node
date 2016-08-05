@@ -9,6 +9,8 @@ export class ContentStorage {
 
     private static articleStorage = new Map<string, si.IArticleContainer>();
     private static urlToUuidMap = new Map<string, string>();
+    private static enclosureStorage = new Map<string, Buffer>();
+    private static logoStorage = new Map<string, Buffer>();
 
     saveArticle(article: si.IArticleContainer): boolean {
         ContentStorage.articleStorage[article.uuid] = article;
@@ -16,7 +18,17 @@ export class ContentStorage {
         return true;
     }
 
-    getArticleByGuid(uuid: string): si.IArticleContainer {
+    saveEnclosure(uuid: string, enclosure: Buffer): boolean {
+        ContentStorage.enclosureStorage[uuid] = enclosure;
+        return true;
+    }
+
+    saveLogo(sourceName: string, logo: Buffer): boolean {
+        ContentStorage.enclosureStorage[sourceName] = logo;
+        return true;
+    }
+
+    getArticleByUuid(uuid: string): si.IArticleContainer {
         if (ContentStorage.articleStorage.has(uuid)) {
             return ContentStorage.articleStorage[uuid];
         }
@@ -37,6 +49,20 @@ export class ContentStorage {
         let uuid = ContentStorage.urlToUuidMap[url];
         if (uuid) {
             return ContentStorage.articleStorage[uuid];
+        }
+        return null;
+    }
+
+    getEnclosureByUuid(uuid: string): Buffer {
+        if (ContentStorage.enclosureStorage.has(uuid)) {
+            return ContentStorage.enclosureStorage[uuid];
+        }
+        return null;
+    }
+
+    getLogo(sourceName: string): Buffer {
+        if (ContentStorage.logoStorage.has(sourceName)) {
+            return ContentStorage.logoStorage[sourceName];
         }
         return null;
     }

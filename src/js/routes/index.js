@@ -1,4 +1,3 @@
-/// <reference path="../../typings/index.d.ts" />
 /**
  * Main application router
  */
@@ -18,8 +17,9 @@ router.get('/api/sources', (req, res, next) => {
     res.status(200).json(rss.getRssSources());
 });
 router.post('/api/sources', (req, res, next) => {
-    news.getNews(req.body.rsssources, 1, true);
-    res.status(200);
+    news.getNews(req.body.rsssources, 1, true, (newsFeed) => {
+        res.status(200).json(newsFeed);
+    });
 });
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = router;
