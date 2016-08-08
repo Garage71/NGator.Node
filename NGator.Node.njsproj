@@ -45,6 +45,13 @@
     <Content Include="public\bower\angular-animate\LICENSE.md" />
     <Content Include="public\bower\angular-animate\package.json" />
     <Content Include="public\bower\angular-animate\README.md" />
+    <Content Include="public\bower\angular-bootstrap\.bower.json" />
+    <Content Include="public\bower\angular-bootstrap\.gitignore" />
+    <Content Include="public\bower\angular-bootstrap\.npmignore" />
+    <Content Include="public\bower\angular-bootstrap\bower.json" />
+    <Content Include="public\bower\angular-bootstrap\package.json" />
+    <Content Include="public\bower\angular-bootstrap\README.md" />
+    <Content Include="public\bower\angular-bootstrap\ui-bootstrap-csp.css" />
     <Content Include="public\bower\angular-chosen-localytics\.bower.json" />
     <Content Include="public\bower\angular-chosen-localytics\.gitignore" />
     <Content Include="public\bower\angular-chosen-localytics\.npmignore" />
@@ -285,6 +292,11 @@
     <Compile Include="public\bower\angular-animate\angular-animate.js" />
     <Compile Include="public\bower\angular-animate\angular-animate.min.js" />
     <Compile Include="public\bower\angular-animate\index.js" />
+    <Compile Include="public\bower\angular-bootstrap\index.js" />
+    <Compile Include="public\bower\angular-bootstrap\ui-bootstrap-tpls.js" />
+    <Compile Include="public\bower\angular-bootstrap\ui-bootstrap-tpls.min.js" />
+    <Compile Include="public\bower\angular-bootstrap\ui-bootstrap.js" />
+    <Compile Include="public\bower\angular-bootstrap\ui-bootstrap.min.js" />
     <Compile Include="public\bower\angular-chosen-localytics\chosen.js" />
     <Compile Include="public\bower\angular-chosen-localytics\dist\angular-chosen.min.js" />
     <Compile Include="public\bower\angular-chosen-localytics\example\index.js" />
@@ -512,6 +524,7 @@
     <Content Include="typings\globals\angular\typings.json" />
     <Content Include="typings\globals\body-parser\typings.json" />
     <Content Include="typings\globals\cookie-parser\typings.json" />
+    <Content Include="typings\globals\iconv\typings.json" />
     <Content Include="typings\globals\jquery\typings.json" />
     <Content Include="typings\globals\mime\typings.json" />
     <Content Include="typings\globals\morgan\typings.json" />
@@ -539,6 +552,7 @@
     <TypeScriptCompile Include="typings\globals\body-parser\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\cookie-parser\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\express-serve-static-core\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\iconv\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\jquery\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\mime\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\morgan\index.d.ts" />
@@ -564,6 +578,7 @@
     <Folder Include="bin" />
     <Folder Include="public\bower\" />
     <Folder Include="public\bower\angular-animate\" />
+    <Folder Include="public\bower\angular-bootstrap\" />
     <Folder Include="public\bower\angular-chosen-localytics\" />
     <Folder Include="public\bower\angular-chosen-localytics\dist\" />
     <Folder Include="public\bower\angular-chosen-localytics\example\" />
@@ -707,6 +722,7 @@
     <Folder Include="typings\globals\cookie-parser\" />
     <Folder Include="typings\globals\express" />
     <Folder Include="typings\globals\express-serve-static-core\" />
+    <Folder Include="typings\globals\iconv\" />
     <Folder Include="typings\globals\jquery\" />
     <Folder Include="typings\globals\mime\" />
     <Folder Include="typings\globals\morgan\" />

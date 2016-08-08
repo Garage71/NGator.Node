@@ -20,8 +20,8 @@ export class RssParser {
     private articles: any[] = [];
     private default_author: any;
     private meta: any;
-    private error: any;
-    private cs = new ContentStorage();
+    private error: any;    
+    private cs = ContentStorage;
     constructor(private callback: any) {
         this.parser.onopentag = (tag) => {
              this.open(tag);
@@ -184,11 +184,15 @@ export class RssParser {
                     let logoTag = this.childByName(currentTag, 'image');
                     if (logoTag) {
                         let logoUrl = this.childData(logoTag, 'url');
+                        
                         if (logoUrl) {
+                            if (!logoUrl.includes('http')) {
+                                logoUrl = 'http:' + logoUrl;
+                            }
+                            source.hasLogo = true;
                             BinaryProvider.getBinaryData(logoUrl,
                             (logo) => {
                                 this.cs.saveLogo(source.name, logo);
-                                source.hasLogo = true;
                             });
                         }
                     }
@@ -223,7 +227,7 @@ export class RssParser {
                         link: this.childData(article, 'link'),
                         source: this.childData(article, 'source'),
                         uuid: UUID.v4(),                        
-                        hasLogo: true,
+                        hasLogo: source.hasLogo,
                         hasEnclosure: article.hasEnclosure 
                     };
 

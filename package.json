@@ -18,6 +18,7 @@
     "gulp-debug": "^2.1.2",
     "gulp-inject": "^4.1.0",
     "hbs": "^4.0.0",
+    "iconv": "^2.2.1",
     "jade": "~1.11.0",
     "memory-streams": "^0.1.0",
     "morgan": "~1.7.0",

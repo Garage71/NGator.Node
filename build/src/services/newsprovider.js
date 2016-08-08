@@ -3,12 +3,13 @@
 */
 "use strict";
 const request = require('request');
-const contentStorage = require('./contentstorage');
+const contentstorage_1 = require('./contentstorage');
 const rssParser = require('./rssparser');
+const iconv = require('iconv');
 class NewsProvider {
     constructor() {
-        this.cs = new contentStorage.ContentStorage();
         this.PageSize = 10;
+        this.cs = contentstorage_1.ContentStorage;
     }
     getNews(sources, page, refresh, callBack) {
         let feed = new Map();
@@ -16,15 +17,28 @@ class NewsProvider {
             sourceFeed: [],
             isLoaded: false
         }));
+        let encoder = new iconv.Iconv('cp1251', 'utf8');
         if (!refresh) {
+            let finalFeed = [];
             for (let src of sources) {
-                let headers = this.cs.getArticlesBySource(src).map(article => article.header).sort(this.sorter);
-                callBack(headers.slice((page - 1) * this.PageSize, page * this.PageSize), headers.length);
+                let feed = this.cs.getArticlesBySource(src);
+                let headers = feed.map(article => article.header).sort(this.sorter);
+                for (let header of headers) {
+                    finalFeed.push(header);
+                }
             }
+            callBack(finalFeed.slice((page - 1) * this.PageSize, page * this.PageSize), finalFeed.length);
+            return;
         }
         for (let source of sources) {
             let result = [];
-            let req = request(source.url, (err, resp, data) => {
+            let req = request(source.url, {
+                encoding: null
+            }, (err, resp, data) => {
+                let rssData = data;
+                if (source.name === 'VZ.ru') {
+                    rssData = encoder.convert(data);
+                }
                 let parser = new rssParser.RssParser((headers) => {
                     for (let header of headers) {
                         header.source = source.name;
@@ -46,7 +60,7 @@ class NewsProvider {
                         isLoaded: true
                     });
                 });
-                parser.parse(data, source);
+                parser.parse(rssData.toString(), source);
                 let isCompleted = true;
                 let finalFeed = [];
                 for (let src of feed) {

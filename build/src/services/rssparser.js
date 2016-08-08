@@ -17,7 +17,7 @@ class RssParser {
         });
         this.article = {};
         this.articles = [];
-        this.cs = new contentstorage_1.ContentStorage();
+        this.cs = contentstorage_1.ContentStorage;
         this.parser.onopentag = (tag) => {
             this.open(tag);
         };
@@ -170,9 +170,12 @@ class RssParser {
                     if (logoTag) {
                         let logoUrl = this.childData(logoTag, 'url');
                         if (logoUrl) {
+                            if (!logoUrl.includes('http')) {
+                                logoUrl = 'http:' + logoUrl;
+                            }
+                            source.hasLogo = true;
                             binaryprovider_1.BinaryProvider.getBinaryData(logoUrl, (logo) => {
                                 this.cs.saveLogo(source.name, logo);
-                                source.hasLogo = true;
                             });
                         }
                     }
@@ -205,7 +208,7 @@ class RssParser {
                     link: this.childData(article, 'link'),
                     source: this.childData(article, 'source'),
                     uuid: UUID.v4(),
-                    hasLogo: true,
+                    hasLogo: source.hasLogo,
                     hasEnclosure: article.hasEnclosure
                 };
                 if (article.hasEnclosure) {

@@ -5,15 +5,18 @@
 
 import * as si from '../shared/interfaces';
 import * as request from 'request';
-import * as contentStorage from './contentstorage';
+import {ContentStorage} from './contentstorage';
 import * as rssParser from './rssparser';
-import * as _ from 'underscore';
+import * as iconv from 'iconv';
+import {IncomingMessage} from "http";
 
 export class NewsProvider {
-    private cs = new contentStorage.ContentStorage();
+    
     private PageSize = 10;
+    private cs = ContentStorage;
     getNews(sources: si.IRSSSource[], page: number, refresh: boolean, callBack: (newsFeed: si.INewsHeader[], totalCount: number) => void):
-    void {
+        void {
+
         let feed: Map<si.IRSSSource, {
             sourceFeed: si.INewsHeader[],
             isLoaded: boolean,
@@ -22,19 +25,32 @@ export class NewsProvider {
             sourceFeed: [],
             isLoaded: false
         }));
-
+        let encoder = new iconv.Iconv('cp1251', 'utf8');
         if (!refresh) {
+            let finalFeed: si.INewsHeader[] = [];
             for (let src of sources) {
-                let headers = this.cs.getArticlesBySource(src).map(article => article.header).sort(this.sorter);
-                callBack(headers.slice((page - 1) * this.PageSize, page * this.PageSize), headers.length);
+                let feed = this.cs.getArticlesBySource(src);
+                let headers = feed.map(article => article.header).sort(this.sorter);
+                for(let header of headers) {
+                    finalFeed.push(header);
+                }
             }
+            callBack(finalFeed.slice((page - 1) * this.PageSize, page * this.PageSize), finalFeed.length);
+            return;
         }
 
         for (let source of sources) {
             let result: si.INewsHeader[] = [];
-            let req = request(source.url,
-            (err, resp, data) => {                
-                let parser = new rssParser.RssParser((headers: si.INewsHeader[]) => {
+            let req = request(source.url, {
+                    encoding: null
+                },
+                (err: Error, resp: IncomingMessage, data: Buffer) => {
+                    let rssData = data;
+                    if(source.name === 'VZ.ru') {
+                        rssData = encoder.convert(data);
+                    }
+
+                    let parser = new rssParser.RssParser((headers: si.INewsHeader[]) => {
                     for (let header of headers) {
                         header.source = source.name;
                         let body: si.IBodyContainer = {
@@ -55,7 +71,7 @@ export class NewsProvider {
                             isLoaded: true
                         });
                 });
-                parser.parse(data, source);
+                parser.parse(rssData.toString(), source);
 
                 let isCompleted = true;
                 let finalFeed: si.INewsHeader[] = [];

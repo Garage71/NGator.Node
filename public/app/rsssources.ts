@@ -14,6 +14,16 @@ module app {
         newsList = [];
         loadButtonEnabled = true;
         selectedSources: si.IRSSSource[] = [];
+        totalItems: number;
+        maxSize = 10;        
+        currentPage = 1;
+
+        private articlesRequest = {
+            rssSources: [],
+            refresh: true,
+            currentPage: 1
+        };
+
         constructor(private $http: ng.IHttpService) {
             $http.get('/api/sources').then((response: any) => {
                 let container = response.data as si.IRSSSources;
@@ -23,18 +33,70 @@ module app {
         }
 
         getNews(): void {
-            let sources: si.IRSSSource[] = [];
-            let request: si.IRSSSources = {
-                rsssources: sources
-            };
+            this.articlesRequest.rssSources = [];
+            this.articlesRequest.refresh = true;
+            this.articlesRequest.currentPage = 1;
             for (let source of this.selectedSources) {
-                sources.push(source);
+                this.articlesRequest.rssSources.push(source);
             }
-            this.$http.post('/api/sources', request).then((response: any) => {
+            this.newsList = [];
+            this.totalItems = 0;
+            this.$http.post('/api/sources', this.articlesRequest).then((response: any) => {
                 let container = response.data as si.INewsHeaders;
                 this.newsHeaders = container.newsHeaders;
+                this.newsHeaders.forEach((header) => {
+                    let stringDate = header.publishDate.toLocaleString('ru-RU', { hour12: false });
+                    this.newsList.push({
+                        date: stringDate,
+                        uuid: header.uuid,
+                        header: header.title,
+                        quote: header.description,
+                        link: header.link,
+                        source: header.source,
+                        hasLogo: header.hasLogo,
+                        body: {
+                            body: '',
+                            hasPicture: false
+                        },
+                        hasEnclosure: header.hasEnclosure
+                    });
+                });
+                this.totalItems = container.totalArticlesCount;
             });
-        }      
+        }
+
+        pageChanged(): void {
+            this.articlesRequest.rssSources = [];
+            this.articlesRequest.refresh = false;
+            this.articlesRequest.currentPage = this.currentPage;
+            for (let source of this.selectedSources) {
+                this.articlesRequest.rssSources.push(source);
+            }
+
+            this.$http.post('/api/sources', this.articlesRequest).then((response: any) => {
+                this.newsList = [];
+                let container = response.data as si.INewsHeaders;
+                this.newsHeaders = container.newsHeaders;
+                this.newsHeaders.forEach((header) => {
+                    let stringDate = header.publishDate.toLocaleString('ru-RU', { hour12: false });
+                    this.newsList.push({
+                        date: stringDate,
+                        uuid: header.uuid,
+                        header: header.title,
+                        quote: header.description,
+                        link: header.link,
+                        source: header.source,
+                        hasLogo: header.hasLogo,
+                        body: {
+                            body: '',
+                            hasPicture: false
+                        },
+                        hasEnclosure: header.hasEnclosure
+                    });
+                });
+                this.totalItems = container.totalArticlesCount;
+            });
+        }
     }
 
     angular.module('app')
