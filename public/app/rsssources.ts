@@ -7,6 +7,22 @@
 import * as si from '../../src/shared/interfaces';
 
 module app {
+
+    interface IArticle {
+        date: string,
+        uuid: string,
+        header: string,
+        quote: string,
+        link: string,
+        source: string,
+        hasLogo: boolean,
+        body: {
+            body: string,
+            hasPicture: boolean,
+        },
+        hasEnclosure: boolean,
+    }
+
     export class RssSourcesController {
         static $inject = ['$http'];
         sources: si.IRSSSource[] = [];
@@ -44,23 +60,7 @@ module app {
             this.$http.post('/api/sources', this.articlesRequest).then((response: any) => {
                 let container = response.data as si.INewsHeaders;
                 this.newsHeaders = container.newsHeaders;
-                this.newsHeaders.forEach((header) => {
-                    let stringDate = header.publishDate.toLocaleString('ru-RU', { hour12: false });
-                    this.newsList.push({
-                        date: stringDate,
-                        uuid: header.uuid,
-                        header: header.title,
-                        quote: header.description,
-                        link: header.link,
-                        source: header.source,
-                        hasLogo: header.hasLogo,
-                        body: {
-                            body: '',
-                            hasPicture: false
-                        },
-                        hasEnclosure: header.hasEnclosure
-                    });
-                });
+                this.newsList = this.processNewsList(this.newsHeaders);
                 this.totalItems = container.totalArticlesCount;
             });
         }
@@ -77,24 +77,58 @@ module app {
                 this.newsList = [];
                 let container = response.data as si.INewsHeaders;
                 this.newsHeaders = container.newsHeaders;
-                this.newsHeaders.forEach((header) => {
-                    let stringDate = header.publishDate.toLocaleString('ru-RU', { hour12: false });
-                    this.newsList.push({
-                        date: stringDate,
-                        uuid: header.uuid,
-                        header: header.title,
-                        quote: header.description,
-                        link: header.link,
-                        source: header.source,
-                        hasLogo: header.hasLogo,
-                        body: {
-                            body: '',
-                            hasPicture: false
-                        },
-                        hasEnclosure: header.hasEnclosure
-                    });
-                });
-                this.totalItems = container.totalArticlesCount;
+                this.newsList = this.processNewsList(this.newsHeaders);
+                this.totalItems = container.totalArticlesCount;                
+            });
+        }
+
+        private processNewsList(headers: si.INewsHeader[]): IArticle[] {
+            let articles: IArticle[] = [];
+            for (let header of headers) {
+                let stringDate = new Date(Date.parse(header.publishDate.toLocaleString())).toLocaleString('ru-RU', { hour12: false });
+                let article: IArticle = {
+                    date: stringDate,
+                    uuid: header.uuid,
+                    header: header.title,
+                    quote: header.description,
+                    link: header.link,
+                    source: header.source,
+                    hasLogo: header.hasLogo,
+                    body: {
+                        body: '',
+                        hasPicture: false
+                    },
+                    hasEnclosure: header.hasEnclosure
+                }
+                this.articleLoader(article);
+                articles.push(article);
+            }
+            return articles;
+        }
+
+        private articleLoader(article: IArticle): void {
+            let isOpened = false;
+            Object.defineProperty(article, 'isOpened', {
+                    get() {
+                         return isOpened;
+                    },
+                    set: (newValue: boolean) =>  {
+                        isOpened = newValue;
+                        if (isOpened) {                            
+                            this.$http.get('/api/sources/article/' + article.uuid)
+                                .then( (data: any) => {
+                                    article.body.body = data.data.body;
+                                    article.body.hasPicture = data.data.hasPicture;
+                                    if (article.hasEnclosure || data.data.hasPicture) {
+                                        let imgContainer = $('#' + article.uuid + '-pic');
+                                        imgContainer.empty();
+                                        imgContainer.append('<img src=\'api/sources/picture/' + article.uuid + '\' class=\'article-picture\' />');
+                                    }
+                                }).catch((reason: any) => {
+                                    article.body.body = reason;
+                                });
+                        }
+                    }
             });
         }
     }

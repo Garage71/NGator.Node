@@ -21,6 +21,7 @@ export interface INewsHeader {
     source: string;
     hasLogo: boolean;
     hasEnclosure: boolean;
+    enclosure: string;
 }
 
 export interface INewsHeaders {
@@ -36,6 +37,6 @@ export interface IArticleContainer {
 }
 
 export interface IBodyContainer {    
-    body: string;        
+    body: string;
     hasPicture: boolean;
 }

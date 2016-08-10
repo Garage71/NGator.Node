@@ -37,23 +37,7 @@ var app;
             this.$http.post('/api/sources', this.articlesRequest).then((response) => {
                 let container = response.data;
                 this.newsHeaders = container.newsHeaders;
-                this.newsHeaders.forEach((header) => {
-                    let stringDate = header.publishDate.toLocaleString('ru-RU', { hour12: false });
-                    this.newsList.push({
-                        date: stringDate,
-                        uuid: header.uuid,
-                        header: header.title,
-                        quote: header.description,
-                        link: header.link,
-                        source: header.source,
-                        hasLogo: header.hasLogo,
-                        body: {
-                            body: '',
-                            hasPicture: false
-                        },
-                        hasEnclosure: header.hasEnclosure
-                    });
-                });
+                this.newsList = this.processNewsList(this.newsHeaders);
                 this.totalItems = container.totalArticlesCount;
             });
         }
@@ -68,24 +52,56 @@ var app;
                 this.newsList = [];
                 let container = response.data;
                 this.newsHeaders = container.newsHeaders;
-                this.newsHeaders.forEach((header) => {
-                    let stringDate = header.publishDate.toLocaleString('ru-RU', { hour12: false });
-                    this.newsList.push({
-                        date: stringDate,
-                        uuid: header.uuid,
-                        header: header.title,
-                        quote: header.description,
-                        link: header.link,
-                        source: header.source,
-                        hasLogo: header.hasLogo,
-                        body: {
-                            body: '',
-                            hasPicture: false
-                        },
-                        hasEnclosure: header.hasEnclosure
-                    });
-                });
+                this.newsList = this.processNewsList(this.newsHeaders);
                 this.totalItems = container.totalArticlesCount;
+            });
+        }
+        processNewsList(headers) {
+            let articles = [];
+            for (let header of headers) {
+                let stringDate = new Date(Date.parse(header.publishDate.toLocaleString())).toLocaleString('ru-RU', { hour12: false });
+                let article = {
+                    date: stringDate,
+                    uuid: header.uuid,
+                    header: header.title,
+                    quote: header.description,
+                    link: header.link,
+                    source: header.source,
+                    hasLogo: header.hasLogo,
+                    body: {
+                        body: '',
+                        hasPicture: false
+                    },
+                    hasEnclosure: header.hasEnclosure
+                };
+                this.articleLoader(article);
+                articles.push(article);
+            }
+            return articles;
+        }
+        articleLoader(article) {
+            let isOpened = false;
+            Object.defineProperty(article, 'isOpened', {
+                get() {
+                    return isOpened;
+                },
+                set: (newValue) => {
+                    isOpened = newValue;
+                    if (isOpened) {
+                        this.$http.get('/api/sources/article/' + article.uuid)
+                            .then((data) => {
+                            article.body.body = data.data.body;
+                            article.body.hasPicture = data.data.hasPicture;
+                            if (article.hasEnclosure || data.data.hasPicture) {
+                                let imgContainer = $('#' + article.uuid + '-pic');
+                                imgContainer.empty();
+                                imgContainer.append('<img src=\'api/sources/picture/' + article.uuid + '\' class=\'article-picture\' />');
+                            }
+                        }).catch((reason) => {
+                            article.body.body = reason;
+                        });
+                    }
+                }
             });
         }
     }

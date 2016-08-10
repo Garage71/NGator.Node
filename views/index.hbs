@@ -10,12 +10,21 @@
     <div class="row">
         <div class="col-xs-12">            
             <uib-accordion close-others="false">
-                <div uib-accordion-group class="panel-default" heading="\{{article.header}}" ng-repeat="article in vm.newsList" id="\{{article.uuid}}">
+                <div uib-accordion-group 
+                     class="panel-default" 
+                     heading="\{{article.header}}" 
+                     ng-repeat="article in vm.newsList" 
+                     id="\{{article.uuid}}"
+                     is-open="article.isOpened">
                     <uib-accordion-heading class="container">
                         \{{article.header}}; <small>\{{article.date}}</small><br><br><img ng-show="\{{article.hasLogo}}" ng-src="api/sources/logo/\{{article.source}}" title="\{{article.source}}" class="logo-picture">
                         <label ng-show="!article.hasLogo" style="color: blue">//\{{article.source}}</label>
                     </uib-accordion-heading>
-                    \{{header.quote}}
+                    <div uib-alert ng-class="'alert alert-info'" ng-show="article.body.body === ''">Loading article</div>
+                    <div id="\{{article.uuid + '-pic'}}"></div>
+                    \{{article.body.body}}
+                    <br>
+                    <a href="\{{article.link}}" target="_blank">//\{{article.source}}</a>
                 </div>
             </uib-accordion>                                
         </div>

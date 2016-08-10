@@ -1,6 +1,6 @@
 ﻿/**
  * News content storage service
- * 
+ * Implemented using singleton NodeJS pattern
 */
 
 import * as si from '../shared/interfaces';
@@ -11,16 +11,32 @@ class ContentStorage {
     private enclosureStorage = new Map<string, Buffer>();
     private logoStorage = new Map<string, Buffer>();
     private callbacksQueue = new Map<string, ((data: Buffer) => void)[]>();
-       
+
+
+    clear() {
+        this.articleStorage.clear();
+        this.urlToUuidMap.clear();
+        this.enclosureStorage.clear();
+        this.logoStorage.clear();
+        this.callbacksQueue.clear();
+    }
     saveArticle(article: si.IArticleContainer): boolean {
         this.articleStorage.set(article.uuid, article);
         this.urlToUuidMap.set(article.header.link, article.uuid);
         return true;
     }
 
-    saveEnclosure(uuid: string, enclosure: Buffer): boolean {
+    saveEnclosure(uuid: string, enclosure: Buffer): void {
         this.enclosureStorage.set(uuid, enclosure);
-        return true;
+        let queue = this.callbacksQueue.get(uuid);
+        if (queue) {
+            let cb: (data: Buffer) => void;
+            cb = queue.pop();
+            while (cb) {
+                cb(enclosure);
+                cb = queue.pop();
+            }
+        }
     }
 
     saveLogo(sourceName: string, logo: Buffer): void {
@@ -60,8 +76,15 @@ class ContentStorage {
         return null;
     }
 
-    getEnclosureByUuid(uuid: string): Buffer {
-        return this.enclosureStorage.get(uuid);
+    getEnclosureByUuid(uuid: string, callback: (data: Buffer) => void): void {
+        if (this.enclosureStorage.has(uuid)) {
+            let pic = this.enclosureStorage.get(uuid);
+            callback(pic);
+        } else {
+            let queue = this.callbacksQueue.get(uuid) || [];
+            queue.push(callback);
+            this.callbacksQueue.set(uuid, queue);
+        }
     }
 
     getLogo(sourceName: string, callback: (data: Buffer) => void): void {

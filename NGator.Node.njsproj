@@ -544,7 +544,10 @@
     <TypeScriptCompile Include="src\routes\index.ts" />
     <TypeScriptCompile Include="src\services\binaryprovider.ts" />
     <TypeScriptCompile Include="src\services\contentstorage.ts" />
+    <TypeScriptCompile Include="src\services\helper.ts" />
     <TypeScriptCompile Include="src\services\newsprovider.ts" />
+    <TypeScriptCompile Include="src\services\parsers\abstractparser.ts" />
+    <TypeScriptCompile Include="src\services\parsers\lentaparser.ts" />
     <TypeScriptCompile Include="src\services\rssparser.ts" />
     <TypeScriptCompile Include="src\services\rsssources.ts" />
     <TypeScriptCompile Include="src\shared\interfaces.ts" />
@@ -712,6 +715,7 @@
     <Folder Include="public" />
     <Folder Include="public\images" />
     <Folder Include="public\stylesheets" />
+    <Folder Include="src\services\parsers\" />
     <Folder Include="src\shared\" />
     <Folder Include="src\services\" />
     <Folder Include="src\routes\" />

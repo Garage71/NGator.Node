@@ -1,6 +1,6 @@
 /**
  * News content storage service
- *
+ * Implemented using singleton NodeJS pattern
 */
 "use strict";
 class ContentStorage {
@@ -11,6 +11,13 @@ class ContentStorage {
         this.logoStorage = new Map();
         this.callbacksQueue = new Map();
     }
+    clear() {
+        this.articleStorage.clear();
+        this.urlToUuidMap.clear();
+        this.enclosureStorage.clear();
+        this.logoStorage.clear();
+        this.callbacksQueue.clear();
+    }
     saveArticle(article) {
         this.articleStorage.set(article.uuid, article);
         this.urlToUuidMap.set(article.header.link, article.uuid);
@@ -18,7 +25,15 @@ class ContentStorage {
     }
     saveEnclosure(uuid, enclosure) {
         this.enclosureStorage.set(uuid, enclosure);
-        return true;
+        let queue = this.callbacksQueue.get(uuid);
+        if (queue) {
+            let cb;
+            cb = queue.pop();
+            while (cb) {
+                cb(enclosure);
+                cb = queue.pop();
+            }
+        }
     }
     saveLogo(sourceName, logo) {
         this.logoStorage.set(sourceName, logo);
@@ -54,8 +69,16 @@ class ContentStorage {
         }
         return null;
     }
-    getEnclosureByUuid(uuid) {
-        return this.enclosureStorage.get(uuid);
+    getEnclosureByUuid(uuid, callback) {
+        if (this.enclosureStorage.has(uuid)) {
+            let pic = this.enclosureStorage.get(uuid);
+            callback(pic);
+        }
+        else {
+            let queue = this.callbacksQueue.get(uuid) || [];
+            queue.push(callback);
+            this.callbacksQueue.set(uuid, queue);
+        }
     }
     getLogo(sourceName, callback) {
         if (this.logoStorage.has(sourceName)) {

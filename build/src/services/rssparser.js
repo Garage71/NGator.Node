@@ -130,7 +130,8 @@ class RssParser {
                 link: this.childByName(art, 'link').attributes.href,
                 source: this.childData(art, 'source'),
                 hasLogo: false,
-                hasEnclosure: false
+                hasEnclosure: false,
+                enclosure: ''
             };
             if (header.hasEnclosure) {
                 binaryprovider_1.BinaryProvider.getBinaryData(art.enclosure, (buffer) => {
@@ -209,7 +210,8 @@ class RssParser {
                     source: this.childData(article, 'source'),
                     uuid: UUID.v4(),
                     hasLogo: source.hasLogo,
-                    hasEnclosure: article.hasEnclosure
+                    hasEnclosure: article.hasEnclosure,
+                    enclosure: article.enclosure
                 };
                 if (article.hasEnclosure) {
                     binaryprovider_1.BinaryProvider.getBinaryData(article.enclosure, (buffer) => {

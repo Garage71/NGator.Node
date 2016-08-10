@@ -21,15 +21,16 @@ class NewsProvider {
         if (!refresh) {
             let finalFeed = [];
             for (let src of sources) {
-                let feed = this.cs.getArticlesBySource(src);
-                let headers = feed.map(article => article.header).sort(this.sorter);
-                for (let header of headers) {
+                let feed = this.cs.getArticlesBySource(src).map((article) => { return article.header; });
+                for (let header of feed) {
                     finalFeed.push(header);
                 }
             }
-            callBack(finalFeed.slice((page - 1) * this.PageSize, page * this.PageSize), finalFeed.length);
+            let headers = finalFeed.sort(this.sorter);
+            callBack(headers.slice((page - 1) * this.PageSize, page * this.PageSize), finalFeed.length);
             return;
         }
+        this.cs.clear();
         for (let source of sources) {
             let result = [];
             let req = request(source.url, {

@@ -40,23 +40,7 @@ var app;
             this.$http.post('/api/sources', this.articlesRequest).then(function (response) {
                 var container = response.data;
                 _this.newsHeaders = container.newsHeaders;
-                _this.newsHeaders.forEach(function (header) {
-                    var stringDate = header.publishDate.toLocaleString('ru-RU', { hour12: false });
-                    _this.newsList.push({
-                        date: stringDate,
-                        uuid: header.uuid,
-                        header: header.title,
-                        quote: header.description,
-                        link: header.link,
-                        source: header.source,
-                        hasLogo: header.hasLogo,
-                        body: {
-                            body: '',
-                            hasPicture: false
-                        },
-                        hasEnclosure: header.hasEnclosure
-                    });
-                });
+                _this.newsList = _this.processNewsList(_this.newsHeaders);
                 _this.totalItems = container.totalArticlesCount;
             });
         };
@@ -73,24 +57,58 @@ var app;
                 _this.newsList = [];
                 var container = response.data;
                 _this.newsHeaders = container.newsHeaders;
-                _this.newsHeaders.forEach(function (header) {
-                    var stringDate = header.publishDate.toLocaleString('ru-RU', { hour12: false });
-                    _this.newsList.push({
-                        date: stringDate,
-                        uuid: header.uuid,
-                        header: header.title,
-                        quote: header.description,
-                        link: header.link,
-                        source: header.source,
-                        hasLogo: header.hasLogo,
-                        body: {
-                            body: '',
-                            hasPicture: false
-                        },
-                        hasEnclosure: header.hasEnclosure
-                    });
-                });
+                _this.newsList = _this.processNewsList(_this.newsHeaders);
                 _this.totalItems = container.totalArticlesCount;
+            });
+        };
+        RssSourcesController.prototype.processNewsList = function (headers) {
+            var articles = [];
+            for (var _i = 0, headers_1 = headers; _i < headers_1.length; _i++) {
+                var header = headers_1[_i];
+                var stringDate = new Date(Date.parse(header.publishDate.toLocaleString())).toLocaleString('ru-RU', { hour12: false });
+                var article = {
+                    date: stringDate,
+                    uuid: header.uuid,
+                    header: header.title,
+                    quote: header.description,
+                    link: header.link,
+                    source: header.source,
+                    hasLogo: header.hasLogo,
+                    body: {
+                        body: '',
+                        hasPicture: false
+                    },
+                    hasEnclosure: header.hasEnclosure
+                };
+                this.articleLoader(article);
+                articles.push(article);
+            }
+            return articles;
+        };
+        RssSourcesController.prototype.articleLoader = function (article) {
+            var _this = this;
+            var isOpened = false;
+            Object.defineProperty(article, 'isOpened', {
+                get: function () {
+                    return isOpened;
+                },
+                set: function (newValue) {
+                    isOpened = newValue;
+                    if (isOpened) {
+                        _this.$http.get('/api/sources/article/' + article.uuid)
+                            .then(function (data) {
+                            article.body.body = data.data.body;
+                            article.body.hasPicture = data.data.hasPicture;
+                            if (article.hasEnclosure || data.data.hasPicture) {
+                                var imgContainer = $('#' + article.uuid + '-pic');
+                                imgContainer.empty();
+                                imgContainer.append('<img src=\'api/sources/picture/' + article.uuid + '\' class=\'article-picture\' />');
+                            }
+                        }).catch(function (reason) {
+                            article.body.body = reason;
+                        });
+                    }
+                }
             });
         };
         RssSourcesController.$inject = ['$http'];
