@@ -4,24 +4,6 @@ class LentaParser extends abstractparser_1.AbstractParser {
     constructor(cb) {
         super(cb);
         this.cb = cb;
-        this.parser.onopentag = (tag) => {
-            this.open(tag);
-        };
-        this.parser.onclosetag = (tag) => {
-            this.close(tag);
-        };
-        this.parser.onerror = () => {
-            this.error = undefined;
-        };
-        this.parser.ontext = (text) => {
-            this.ontext(text);
-        };
-        this.parser.oncdata = (text) => {
-            this.ontext(text);
-        };
-        this.parser.onend = () => {
-            this.onend();
-        };
     }
     parseArticle(article) {
         this.getArticle(article.header.link, (document) => {
@@ -32,7 +14,7 @@ class LentaParser extends abstractparser_1.AbstractParser {
         this.parser.write(xml).close();
     }
     ;
-    open(tag) {
+    openTag(tag) {
         tag.parent = this.current_tag;
         tag.children = [];
         if (tag.parent) {
@@ -41,7 +23,7 @@ class LentaParser extends abstractparser_1.AbstractParser {
         this.current_tag = tag;
         this.onopentag(tag);
     }
-    close(tagname) {
+    closeTag(tagname) {
         this.onclosetag(tagname, this.current_tag);
         if (this.current_tag && this.current_tag.parent) {
             let p = this.current_tag.parent;
@@ -49,7 +31,7 @@ class LentaParser extends abstractparser_1.AbstractParser {
             this.current_tag = p;
         }
     }
-    ontext(text) {
+    onText(text) {
         if (this.current_tag) {
             this.current_tag.children.push(text);
         }
@@ -84,7 +66,7 @@ class LentaParser extends abstractparser_1.AbstractParser {
             });
         }
     }
-    onend() {
+    onEnd() {
     }
 }
 exports.LentaParser = LentaParser;

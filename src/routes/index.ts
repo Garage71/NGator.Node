@@ -10,6 +10,7 @@ import * as newsProvider from '../services/newsprovider';
 import {ContentStorage} from '../services/contentstorage';
 import {AbstractParser} from '../services/parsers/abstractparser';
 import {LentaParser} from '../services/parsers/lentaparser';
+import {NewsMailRuParser} from '../services/parsers/newsmailruparser';
 import {BinaryProvider} from '../services/binaryprovider';
 
 /// todo: implement Dependency Injection
@@ -40,6 +41,9 @@ router.get('/api/sources/article/:id',
             case 'Lenta.ru':
                 parser = new LentaParser(callback);
                 break;
+            case 'News.mail.ru':
+                parser = new NewsMailRuParser(callback, article.uuid);
+                break;
             default:
                 res.status(404);
         }
@@ -57,12 +61,15 @@ router.get('/api/sources/picture/:id',
             res.status(404);
             return;
         }
-        let picUrl = article.header.enclosure; 
-               
-        BinaryProvider.getBinaryData(picUrl, (picture) => {
-            cs.saveEnclosure(articleID, picture);
-        });
-        
+        let picUrl = article.header.enclosure;
+
+        if (picUrl) {
+            BinaryProvider.getBinaryData(picUrl,
+            (picture) => {
+                cs.saveEnclosure(articleID, picture);
+            });
+        }
+
         cs.getEnclosureByUuid(articleID, (picture) => {
             res.status(200).send(picture);
         });

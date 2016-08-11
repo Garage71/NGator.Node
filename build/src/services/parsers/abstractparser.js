@@ -3,12 +3,31 @@ const request = require('request');
 const iconv = require('iconv');
 const sax = require('sax');
 class AbstractParser {
-    constructor(callback) {
+    constructor(callback, uuid = '') {
         this.callback = callback;
+        this.uuid = uuid;
         this.parser = new sax.SAXParser(true, {
             trim: true,
             normalize: true
         });
+        this.parser.onopentag = (tag) => {
+            this.openTag(tag);
+        };
+        this.parser.onclosetag = (tag) => {
+            this.closeTag(tag);
+        };
+        this.parser.onerror = () => {
+            this.error = undefined;
+        };
+        this.parser.ontext = (text) => {
+            this.onText(text);
+        };
+        this.parser.oncdata = (text) => {
+            this.onText(text);
+        };
+        this.parser.onend = () => {
+            this.onEnd();
+        };
     }
     getArticle(url, callback, encoding = null) {
         request.get(url, {

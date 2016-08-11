@@ -548,6 +548,7 @@
     <TypeScriptCompile Include="src\services\newsprovider.ts" />
     <TypeScriptCompile Include="src\services\parsers\abstractparser.ts" />
     <TypeScriptCompile Include="src\services\parsers\lentaparser.ts" />
+    <TypeScriptCompile Include="src\services\parsers\newsmailruparser.ts" />
     <TypeScriptCompile Include="src\services\rssparser.ts" />
     <TypeScriptCompile Include="src\services\rsssources.ts" />
     <TypeScriptCompile Include="src\shared\interfaces.ts" />

@@ -14,7 +14,32 @@ export abstract class AbstractParser {
     protected error: any;
     protected article: any;
 
-    constructor(private callback: (articleBody: si.IBodyContainer) => void) {}
+    constructor(private callback: (articleBody: si.IBodyContainer) => void, protected uuid = '') {
+        this.parser.onopentag = (tag) => {
+            this.openTag(tag);
+        };
+        this.parser.onclosetag = (tag) => {
+            this.closeTag(tag);
+        };
+
+        this.parser.onerror = () => {
+            this.error = undefined;
+        }
+        this.parser.ontext = (text) => {
+            this.onText(text);
+        };
+        this.parser.oncdata = (text) => {
+            this.onText(text);
+        };
+        this.parser.onend = () => {
+            this.onEnd();
+        };
+    }
+
+    protected abstract openTag(tag: any): void;
+    protected abstract closeTag(tag: any): void;
+    protected abstract onText(text: string): void;
+    protected abstract onEnd() : void;
             
     abstract parseArticle(article: si.IArticleContainer) : void;
 

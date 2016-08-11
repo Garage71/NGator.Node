@@ -28,6 +28,10 @@ class ContentStorage {
 
     saveEnclosure(uuid: string, enclosure: Buffer): void {
         this.enclosureStorage.set(uuid, enclosure);
+        let article = this.articleStorage.get(uuid);
+        if (article) {
+            article.header.hasEnclosure = true;
+        }
         let queue = this.callbacksQueue.get(uuid);
         if (queue) {
             let cb: (data: Buffer) => void;

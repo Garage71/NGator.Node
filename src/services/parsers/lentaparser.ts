@@ -7,25 +7,7 @@ export class LentaParser extends AbstractParser {
 
     constructor(private cb: (articleBody: si.IBodyContainer) => void) {
         super(cb);
-        this.parser.onopentag = (tag) => {
-            this.open(tag);
-        };
-        this.parser.onclosetag = (tag) => {
-            this.close(tag);
-        };
-
-        this.parser.onerror = () => {
-            this.error = undefined;
-        }
-        this.parser.ontext = (text) => {
-            this.ontext(text);
-        };
-        this.parser.oncdata = (text) => {
-            this.ontext(text);
-        };
-        this.parser.onend = () => {
-            this.onend();
-        };        
+        
     }
     parseArticle(article: si.IArticleContainer): void {
         this.getArticle(article.header.link,
@@ -38,7 +20,7 @@ export class LentaParser extends AbstractParser {
         this.parser.write(xml).close();
     };
 
-    private open(tag) {
+    openTag(tag) {
         tag.parent = this.current_tag;
         tag.children = [];
         if (tag.parent) {
@@ -48,7 +30,7 @@ export class LentaParser extends AbstractParser {
         this.onopentag(tag);
     }
 
-    private close(tagname) {
+    closeTag(tagname) {
         this.onclosetag(tagname, this.current_tag);
         if (this.current_tag && this.current_tag.parent) {
             let p = this.current_tag.parent;
@@ -57,7 +39,7 @@ export class LentaParser extends AbstractParser {
         }
     }
 
-    private ontext(text) {
+    onText(text) {
         if (this.current_tag) {
             this.current_tag.children.push(text);
         }
@@ -94,7 +76,7 @@ export class LentaParser extends AbstractParser {
         }  
     }
 
-    private onend() {
+    onEnd() {
 
     }
 } 
