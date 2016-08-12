@@ -10,6 +10,7 @@ const lentaparser_1 = require('../services/parsers/lentaparser');
 const newsmailruparser_1 = require('../services/parsers/newsmailruparser');
 const vzruparser_1 = require('../services/parsers/vzruparser');
 const regnumparser_1 = require('../services/parsers/regnumparser');
+const newsramblerparser_1 = require('../services/parsers/newsramblerparser');
 const binaryprovider_1 = require('../services/binaryprovider');
 /// todo: implement Dependency Injection
 let router = express.Router();
@@ -24,32 +25,42 @@ router.get('/api/sources/logo/:id', (req, res, next) => {
     });
 });
 router.get('/api/sources/article/:id', (req, res, next) => {
-    let callback = (art) => {
-        res.status(200).json(art);
-    };
     let articleID = req.params['id'];
     let article = cs.getArticleByUuid(articleID);
-    let parser = null;
-    let encoding = null;
-    switch (article.rssSource.name) {
-        case 'Lenta.ru':
-            parser = new lentaparser_1.LentaParser(callback);
-            break;
-        case 'News.mail.ru':
-            parser = new newsmailruparser_1.NewsMailRuParser(callback, article.uuid);
-            break;
-        case 'VZ.ru':
-            encoding = 'cp1251';
-            parser = new vzruparser_1.VzRuParser(callback, article.uuid);
-            break;
-        case 'Regnum':
-            parser = new regnumparser_1.RegnumParser(callback, article.uuid);
-            break;
-        default:
-            res.status(404);
+    let callback = (art) => {
+        article.body = art;
+        cs.saveArticle(article);
+        res.status(200).json(art);
+    };
+    if (!article.body.body) {
+        let parser = null;
+        let encoding = null;
+        switch (article.rssSource.name) {
+            case 'Lenta.ru':
+                parser = new lentaparser_1.LentaParser(callback);
+                break;
+            case 'News.mail.ru':
+                parser = new newsmailruparser_1.NewsMailRuParser(callback, article.uuid);
+                break;
+            case 'VZ.ru':
+                encoding = 'cp1251';
+                parser = new vzruparser_1.VzRuParser(callback, article.uuid);
+                break;
+            case 'Regnum':
+                parser = new regnumparser_1.RegnumParser(callback, article.uuid);
+                break;
+            case 'News.rambler.ru':
+                parser = new newsramblerparser_1.NewsRamblerRuParser(callback, article.uuid);
+                break;
+            default:
+                res.status(404);
+        }
+        if (parser) {
+            parser.parseArticle(article, encoding);
+        }
     }
-    if (parser) {
-        parser.parseArticle(article, encoding);
+    else {
+        res.status(200).json(article.body);
     }
 });
 router.get('/api/sources/picture/:id', (req, res, next) => {

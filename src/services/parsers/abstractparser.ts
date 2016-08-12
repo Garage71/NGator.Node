@@ -10,7 +10,7 @@ import * as request from 'request';
 import {IncomingMessage} from 'http';
 import * as iconv from 'iconv';
 import * as sax from 'sax';
-
+import {ContentStorage} from '../contentstorage';
 export abstract class AbstractParser {
 
     protected parser = new sax.SAXParser(true,
@@ -114,11 +114,12 @@ export abstract class AbstractParser {
         return children.join(separator);
     }
 
-    parseArticle(article: si.IArticleContainer, encoding: any): void {
-        this.getArticle(article.header.link,
-        (document) => {
-            this.parser.write(document);
-        }, encoding);
+    parseArticle(article: si.IArticleContainer, encoding: any): void {                           
+            this.getArticle(article.header.link,
+                (document) => {
+                    this.parser.write(document);
+                },
+                encoding);        
     }
 
     write(xml: string) {

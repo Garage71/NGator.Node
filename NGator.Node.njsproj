@@ -549,6 +549,7 @@
     <TypeScriptCompile Include="src\services\parsers\abstractparser.ts" />
     <TypeScriptCompile Include="src\services\parsers\lentaparser.ts" />
     <TypeScriptCompile Include="src\services\parsers\newsmailruparser.ts" />
+    <TypeScriptCompile Include="src\services\parsers\newsramblerparser.ts" />
     <TypeScriptCompile Include="src\services\parsers\regnumparser.ts" />
     <TypeScriptCompile Include="src\services\parsers\vzruparser.ts" />
     <TypeScriptCompile Include="src\services\rssparser.ts" />

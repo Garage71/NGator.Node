@@ -87,7 +87,7 @@ var app;
                 },
                 set: (newValue) => {
                     isOpened = newValue;
-                    if (isOpened) {
+                    if (isOpened && !article.body.body) {
                         this.$http.get('/api/sources/article/' + article.uuid)
                             .then((data) => {
                             article.body.body = data.data.body;

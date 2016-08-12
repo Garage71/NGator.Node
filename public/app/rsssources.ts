@@ -114,7 +114,7 @@ module app {
                     },
                     set: (newValue: boolean) =>  {
                         isOpened = newValue;
-                        if (isOpened) {                            
+                        if (isOpened && !article.body.body) {
                             this.$http.get('/api/sources/article/' + article.uuid)
                                 .then( (data: any) => {
                                     article.body.body = data.data.body;

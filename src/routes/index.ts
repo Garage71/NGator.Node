@@ -13,6 +13,7 @@ import {LentaParser} from '../services/parsers/lentaparser';
 import {NewsMailRuParser} from '../services/parsers/newsmailruparser';
 import {VzRuParser} from '../services/parsers/vzruparser';
 import {RegnumParser} from '../services/parsers/regnumparser';
+import {NewsRamblerRuParser} from '../services/parsers/newsramblerparser';
 import {BinaryProvider} from '../services/binaryprovider';
 
 /// todo: implement Dependency Injection
@@ -33,14 +34,17 @@ router.get('/api/sources/logo/:id',
 
 router.get('/api/sources/article/:id',
     (req, res, next) => {
-        let callback = (art: si.IBodyContainer): void => {
-            res.status(200).json(art);            
-        }
         let articleID = req.params['id'];
         let article = cs.getArticleByUuid(articleID);
-        let parser: AbstractParser = null;
-        let encoding = null;
-        switch(article.rssSource.name) {
+        let callback = (art: si.IBodyContainer): void => {
+            article.body = art;
+            cs.saveArticle(article);
+            res.status(200).json(art);            
+        }        
+        if (!article.body.body) {
+            let parser: AbstractParser = null;
+            let encoding = null;
+            switch (article.rssSource.name) {
             case 'Lenta.ru':
                 parser = new LentaParser(callback);
                 break;
@@ -51,14 +55,20 @@ router.get('/api/sources/article/:id',
                 encoding = 'cp1251';
                 parser = new VzRuParser(callback, article.uuid);
                 break;
-            case 'Regnum':                
+            case 'Regnum':
                 parser = new RegnumParser(callback, article.uuid);
+                break;
+            case 'News.rambler.ru':
+                parser = new NewsRamblerRuParser(callback, article.uuid);
                 break;
             default:
                 res.status(404);
-        }
-        if (parser) {
-            parser.parseArticle(article, encoding);
+            }
+            if (parser) {
+                parser.parseArticle(article, encoding);
+            }
+        } else {
+            res.status(200).json(article.body);
         }
     });
 

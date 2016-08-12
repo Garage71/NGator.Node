@@ -18,35 +18,46 @@ class RegnumParser extends abstractparser_1.AbstractParser {
                 }
             }
         }
+        else if (tag.name === 'img') {
+            if (tag.attributes) {
+                let imgClass = tag.attributes['class'];
+                if (imgClass === 'detail_img') {
+                    this.illustration = tag;
+                }
+            }
+        }
     }
     onclosetag(tagname, currentTag) {
         if (tagname === 'div' && currentTag === this.article) {
-            let paragraphs = this.childrenByName(this.article, 'p');
-            let articleText = '';
-            for (let p of paragraphs) {
-                for (let child of p.children) {
-                    if (typeof child === 'string') {
-                        articleText = articleText + ' ' + child;
-                    }
-                    else {
-                        if (child.children.length > 0) {
-                            let firstInnerChild = child.children[0];
-                            if (typeof firstInnerChild === 'string') {
-                                articleText = articleText + ' ' + firstInnerChild;
+            if (!this.articleText) {
+                let paragraphs = this.childrenByName(this.article, 'p');
+                let articleText = '';
+                for (let p of paragraphs) {
+                    for (let child of p.children) {
+                        if (typeof child === 'string') {
+                            articleText = articleText + ' ' + child;
+                        }
+                        else {
+                            if (child.children.length > 0) {
+                                let firstInnerChild = child.children[0];
+                                if (typeof firstInnerChild === 'string') {
+                                    articleText = articleText + ' ' + firstInnerChild;
+                                }
                             }
                         }
                     }
                 }
+                this.articleText = articleText;
             }
             let pictNode = this.getDescendantByAttributes(currentTag, 'img', 'class', 'main_image');
-            if (pictNode && pictNode.attributes) {
-                let url = pictNode.attributes['src'];
+            if (this.illustrationUrl || (pictNode && pictNode.attributes)) {
+                let url = this.illustrationUrl || pictNode.attributes['src'];
                 if (url && this.uuid) {
                     binaryprovider_1.BinaryProvider.getBinaryData(url, (data) => {
                         contentstorage_1.ContentStorage.saveEnclosure(this.uuid, data);
                         if (!this.cbSent) {
                             this.cb({
-                                body: articleText,
+                                body: this.articleText,
                                 hasPicture: true
                             });
                             this.cbSent = true;
@@ -57,12 +68,15 @@ class RegnumParser extends abstractparser_1.AbstractParser {
             else {
                 if (!this.cbSent) {
                     this.cb({
-                        body: articleText,
+                        body: this.articleText,
                         hasPicture: false
                     });
                     this.cbSent = true;
                 }
             }
+        }
+        else if (tagname === 'img' && currentTag === this.illustration) {
+            this.illustrationUrl = currentTag.attributes['src'];
         }
     }
 }
