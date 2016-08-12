@@ -1,5 +1,5 @@
 ﻿/**
- * Application angular the only controller
+ * Angular application the only controller
 */
 
 'use strict';
@@ -9,18 +9,18 @@ import * as si from '../../src/shared/interfaces';
 module app {
 
     interface IArticle {
-        date: string,
-        uuid: string,
-        header: string,
-        quote: string,
-        link: string,
-        source: string,
-        hasLogo: boolean,
+        date: string;
+        uuid: string;
+        header: string;
+        quote: string;
+        link: string;
+        source: string;
+        hasLogo: boolean;
         body: {
             body: string,
             hasPicture: boolean,
-        },
-        hasEnclosure: boolean,
+        };
+        hasEnclosure: boolean;
     }
 
     export class RssSourcesController {
@@ -31,7 +31,7 @@ module app {
         loadButtonEnabled = true;
         selectedSources: si.IRSSSource[] = [];
         totalItems: number;
-        maxSize = 10;        
+        maxSize = 10;
         currentPage = 1;
 
         private articlesRequest = {
@@ -78,14 +78,15 @@ module app {
                 let container = response.data as si.INewsHeaders;
                 this.newsHeaders = container.newsHeaders;
                 this.newsList = this.processNewsList(this.newsHeaders);
-                this.totalItems = container.totalArticlesCount;                
+                this.totalItems = container.totalArticlesCount;
             });
         }
 
         private processNewsList(headers: si.INewsHeader[]): IArticle[] {
             let articles: IArticle[] = [];
             for (let header of headers) {
-                let stringDate = new Date(Date.parse(header.publishDate.toLocaleString())).toLocaleString('ru-RU', { hour12: false });
+                let stringDate = new Date(Date.parse(header.publishDate.toLocaleString()))
+                    .toLocaleString('ru-RU', { hour12: false });
                 let article: IArticle = {
                     date: stringDate,
                     uuid: header.uuid,
@@ -99,7 +100,7 @@ module app {
                         hasPicture: false
                     },
                     hasEnclosure: header.hasEnclosure
-                }
+                };
                 this.articleLoader(article);
                 articles.push(article);
             }
@@ -109,10 +110,10 @@ module app {
         private articleLoader(article: IArticle): void {
             let isOpened = false;
             Object.defineProperty(article, 'isOpened', {
-                    get() {
+                    get: (): boolean => {
                          return isOpened;
                     },
-                    set: (newValue: boolean) =>  {
+                    set: (newValue: boolean): void =>  {
                         isOpened = newValue;
                         if (isOpened && !article.body.body) {
                             this.$http.get('/api/sources/article/' + article.uuid)
@@ -122,7 +123,8 @@ module app {
                                     if (article.hasEnclosure || data.data.hasPicture) {
                                         let imgContainer = $('#' + article.uuid + '-pic');
                                         imgContainer.empty();
-                                        imgContainer.append('<img src=\'api/sources/picture/' + article.uuid + '\' class=\'article-picture\' />');
+                                        imgContainer.append('<img src=\'api/sources/picture/'
+                                            + article.uuid + '\' class=\'article-picture\' />');
                                     }
                                 }).catch((reason: any) => {
                                     article.body.body = reason;
