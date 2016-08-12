@@ -40,7 +40,7 @@ class NewsMailRuParser extends abstractparser_1.AbstractParser {
                 if (pictNode && pictNode.attributes) {
                     let url = pictNode.attributes['src'];
                     if (url && this.uuid) {
-                        binaryprovider_1.BinaryProvider.getBinaryData(url, (data) => {
+                        binaryprovider_1.BinaryProvider.GETBINARYDATA(url, (data) => {
                             contentstorage_1.ContentStorage.saveEnclosure(this.uuid, data);
                             this.cb({
                                 body: articleText,

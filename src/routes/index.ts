@@ -26,7 +26,7 @@ let cs = ContentStorage;
 
 router.get('/api/sources/logo/:id',
     (req, res, next) => {
-        let logoID = req.params['id'];
+        let logoID = req.params.id;
          cs.getLogo(logoID, (logo) => {
             res.status(200).send(logo);
         });
@@ -34,13 +34,13 @@ router.get('/api/sources/logo/:id',
 
 router.get('/api/sources/article/:id',
     (req, res, next) => {
-        let articleID = req.params['id'];
+        let articleID = req.params.id;
         let article = cs.getArticleByUuid(articleID);
         let callback = (art: si.IBodyContainer): void => {
             article.body = art;
             cs.saveArticle(article);
-            res.status(200).json(art);            
-        }        
+            res.status(200).json(art);
+        };
         if (!article.body.body) {
             let parser: AbstractParser = null;
             let encoding = null;
@@ -74,8 +74,8 @@ router.get('/api/sources/article/:id',
 
 router.get('/api/sources/picture/:id',
     (req, res, next) => {
-        
-        let articleID = req.params['id'];
+
+        let articleID = req.params.id;
         let article = cs.getArticleByUuid(articleID);
         if (!article.body.hasPicture && !article.header.hasEnclosure) {
             res.status(404);
@@ -84,7 +84,7 @@ router.get('/api/sources/picture/:id',
         let picUrl = article.header.enclosure;
 
         if (picUrl) {
-            BinaryProvider.getBinaryData(picUrl,
+            BinaryProvider.GETBINARYDATA(picUrl,
             (picture) => {
                 cs.saveEnclosure(articleID, picture);
             });
@@ -105,7 +105,7 @@ router.get('/api/sources',
         res.status(200).json(rss.getRssSources());
     });
 
-router.post('/api/sources', (req, res, next) => {    
+router.post('/api/sources', (req, res, next) => {
     news.getNews(req.body.rssSources, req.body.currentPage, req.body.refresh, (newsFeed: si.INewsHeader[], totalCount: number) => {
         let result: si.INewsHeaders = {
             newsHeaders: newsFeed,
@@ -114,7 +114,5 @@ router.post('/api/sources', (req, res, next) => {
         res.status(200).json(result);
     });
 });
-
-
 
 export default router;

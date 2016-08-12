@@ -52,7 +52,7 @@ export class NewsRamblerRuParser extends AbstractParser {
             if (pictNode && pictNode.attributes) {
                 let url = pictNode.attributes['src'];
                 if (url && this.uuid) {
-                    BinaryProvider.getBinaryData(url,
+                    BinaryProvider.GETBINARYDATA(url,
                         (data: Buffer) => {
                             ContentStorage.saveEnclosure(this.uuid, data);
                             if (!this.cbSent) {

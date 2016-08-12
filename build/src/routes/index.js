@@ -19,13 +19,13 @@ let news = new newsProvider.NewsProvider();
 let cs = contentstorage_1.ContentStorage;
 /* GET home page. */
 router.get('/api/sources/logo/:id', (req, res, next) => {
-    let logoID = req.params['id'];
+    let logoID = req.params.id;
     cs.getLogo(logoID, (logo) => {
         res.status(200).send(logo);
     });
 });
 router.get('/api/sources/article/:id', (req, res, next) => {
-    let articleID = req.params['id'];
+    let articleID = req.params.id;
     let article = cs.getArticleByUuid(articleID);
     let callback = (art) => {
         article.body = art;
@@ -64,7 +64,7 @@ router.get('/api/sources/article/:id', (req, res, next) => {
     }
 });
 router.get('/api/sources/picture/:id', (req, res, next) => {
-    let articleID = req.params['id'];
+    let articleID = req.params.id;
     let article = cs.getArticleByUuid(articleID);
     if (!article.body.hasPicture && !article.header.hasEnclosure) {
         res.status(404);
@@ -72,7 +72,7 @@ router.get('/api/sources/picture/:id', (req, res, next) => {
     }
     let picUrl = article.header.enclosure;
     if (picUrl) {
-        binaryprovider_1.BinaryProvider.getBinaryData(picUrl, (picture) => {
+        binaryprovider_1.BinaryProvider.GETBINARYDATA(picUrl, (picture) => {
             cs.saveEnclosure(articleID, picture);
         });
     }

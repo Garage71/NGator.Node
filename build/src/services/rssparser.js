@@ -66,25 +66,25 @@ class RssParser {
     }
     ;
     open(tag) {
-        tag.parent = this.current_tag;
+        tag.parent = this.currentTag;
         tag.children = [];
         if (tag.parent) {
             tag.parent.children.push(tag);
         }
-        this.current_tag = tag;
+        this.currentTag = tag;
         this.onopentag(tag);
     }
     close(tagname) {
-        this.onclosetag(tagname, this.current_tag);
-        if (this.current_tag && this.current_tag.parent) {
-            let p = this.current_tag.parent;
-            delete this.current_tag.parent;
-            this.current_tag = p;
+        this.onclosetag(tagname, this.currentTag);
+        if (this.currentTag && this.currentTag.parent) {
+            let p = this.currentTag.parent;
+            delete this.currentTag.parent;
+            this.currentTag = p;
         }
     }
     ontext(text) {
-        if (this.current_tag) {
-            this.current_tag.children.push(text);
+        if (this.currentTag) {
+            this.currentTag.children.push(text);
         }
     }
     onopentag(tag) {
@@ -99,10 +99,12 @@ class RssParser {
             this.article = null;
         }
         else if (tagname === 'author' && !this.article) {
-            this.default_author = this.childData(currentTag, 'name');
+            this.defaultAuthor = this.childData(currentTag, 'name');
         }
         else if (tagname === 'link' && currentTag.attributes.rel !== 'self') {
-            this.meta.link || (this.meta.link = currentTag.attributes.href);
+            if (!this.meta.link) {
+                this.meta.link = currentTag.attributes.href;
+            }
         }
         else if (tagname === 'title' && !currentTag.parent.parent) {
             this.meta.name = currentTag.children[0];
@@ -134,7 +136,7 @@ class RssParser {
                 enclosure: ''
             };
             if (header.hasEnclosure) {
-                binaryprovider_1.BinaryProvider.getBinaryData(art.enclosure, (buffer) => {
+                binaryprovider_1.BinaryProvider.GETBINARYDATA(art.enclosure, (buffer) => {
                     this.cs.saveEnclosure(header.uuid, buffer);
                 });
             }
@@ -164,7 +166,9 @@ class RssParser {
                 this.article = null;
             }
             else if (tagname === 'channel') {
-                this.meta.link || (this.meta.link = this.childData(currentTag, 'link'));
+                if (!this.meta.link) {
+                    this.meta.link = this.childData(currentTag, 'link');
+                }
                 this.meta.name = this.childData(currentTag, 'title');
                 if (!source.hasLogo) {
                     let logoTag = this.childByName(currentTag, 'image');
@@ -172,10 +176,10 @@ class RssParser {
                         let logoUrl = this.childData(logoTag, 'url');
                         if (logoUrl) {
                             if (!logoUrl.includes('http')) {
-                                logoUrl = 'http:' + logoUrl;
+                                logoUrl = `http:${logoUrl}`;
                             }
                             source.hasLogo = true;
-                            binaryprovider_1.BinaryProvider.getBinaryData(logoUrl, (logo) => {
+                            binaryprovider_1.BinaryProvider.GETBINARYDATA(logoUrl, (logo) => {
                                 this.cs.saveLogo(source.name, logo);
                             });
                         }
@@ -202,10 +206,11 @@ class RssParser {
                 else {
                     datePublished = new Date(Date.now());
                 }
-                var header = {
+                let header = {
                     publishDate: datePublished,
                     title: this.childData(article, 'title'),
-                    description: this.scrubHtml(this.childData(article, 'content:encoded')) || this.scrubHtml(this.childData(article, 'description')),
+                    description: this.scrubHtml(this.childData(article, 'content:encoded'))
+                        || this.scrubHtml(this.childData(article, 'description')),
                     link: this.childData(article, 'link'),
                     source: this.childData(article, 'source'),
                     uuid: UUID.v4(),
@@ -214,7 +219,7 @@ class RssParser {
                     enclosure: article.enclosure
                 };
                 if (article.hasEnclosure) {
-                    binaryprovider_1.BinaryProvider.getBinaryData(article.enclosure, (buffer) => {
+                    binaryprovider_1.BinaryProvider.GETBINARYDATA(article.enclosure, (buffer) => {
                         this.cs.saveEnclosure(header.uuid, buffer);
                     });
                 }
@@ -228,9 +233,9 @@ class RssParser {
     }
     childByName(parent, name) {
         let children = parent.children || [];
-        for (let i = 0; i < children.length; i++) {
-            if (children[i].name === name) {
-                return children[i];
+        for (let child of children) {
+            if (child.name === name) {
+                return child;
             }
         }
         return null;

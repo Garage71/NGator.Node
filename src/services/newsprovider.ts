@@ -1,5 +1,4 @@
-﻿
-/**
+﻿/**
 * Rss news list provider
 */
 
@@ -8,11 +7,11 @@ import * as request from 'request';
 import {ContentStorage} from './contentstorage';
 import * as rssParser from './rssparser';
 import * as iconv from 'iconv';
-import {IncomingMessage} from "http";
+import {IncomingMessage} from 'http';
 
 export class NewsProvider {
-    
-    private PageSize = 10;
+
+    private PAGESIZE = 10;
     private cs = ContentStorage;
     getNews(sources: si.IRSSSource[], page: number, refresh: boolean, callBack: (newsFeed: si.INewsHeader[], totalCount: number) => void):
         void {
@@ -29,25 +28,25 @@ export class NewsProvider {
         if (!refresh) {
             let finalFeed: si.INewsHeader[] = [];
             for (let src of sources) {
-                let feed = this.cs.getArticlesBySource(src).map((article) => {return article.header});                
-                for(let header of feed) {
+                let feed = this.cs.getArticlesBySource(src).map((article) => { return article.header; });
+                for (let header of feed) {
                     finalFeed.push(header);
                 }
             }
             let headers = finalFeed.sort(this.sorter);
-            callBack(headers.slice((page - 1) * this.PageSize, page * this.PageSize), finalFeed.length);
+            callBack(headers.slice((page - 1) * this.PAGESIZE, page * this.PAGESIZE), finalFeed.length);
             return;
         }
         this.cs.clear();
 
         for (let source of sources) {
             let result: si.INewsHeader[] = [];
-            let req = request(source.url, {
+            request(source.url, {
                     encoding: null
                 },
                 (err: Error, resp: IncomingMessage, data: Buffer) => {
                     let rssData = data;
-                    if(source.name === 'VZ.ru') {
+                    if (source.name === 'VZ.ru') {
                         rssData = encoder.convert(data);
                     }
 
@@ -89,7 +88,7 @@ export class NewsProvider {
 
                 if (isCompleted) {
                     finalFeed = finalFeed.sort(this.sorter);
-                    let sliced = finalFeed.slice(0, this.PageSize);
+                    let sliced = finalFeed.slice(0, this.PAGESIZE);
                     let totalCount = finalFeed.length;
                     callBack(sliced, totalCount);
                 }

@@ -288,6 +288,7 @@
     <Content Include="tsconfig.json" />
     <Content Include="tslint.json" />
     <Content Include="README.md" />
+    <Compile Include="gulpfile.config.client.js" />
     <Compile Include="gulpfile.config.js" />
     <Compile Include="public\bower\angular-animate\angular-animate.js" />
     <Compile Include="public\bower\angular-animate\angular-animate.min.js" />

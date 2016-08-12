@@ -6,12 +6,4 @@ angular.module('app', ['ngRoute', 'ui.select', 'ngSanitize', 'ngAnimate', 'ui.bo
         $routeProvider.otherwise({ redirectTo: '/' });
     }
 ]);
-/*
-
-'ui.select',
-    'ngResource',
-    'ngAnimate',
-    'ui.bootstrap',
-    'ui.bootstrap.modal'
-*/
 //# sourceMappingURL=app.js.map

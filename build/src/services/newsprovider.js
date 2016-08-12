@@ -8,7 +8,7 @@ const rssParser = require('./rssparser');
 const iconv = require('iconv');
 class NewsProvider {
     constructor() {
-        this.PageSize = 10;
+        this.PAGESIZE = 10;
         this.cs = contentstorage_1.ContentStorage;
     }
     getNews(sources, page, refresh, callBack) {
@@ -27,13 +27,13 @@ class NewsProvider {
                 }
             }
             let headers = finalFeed.sort(this.sorter);
-            callBack(headers.slice((page - 1) * this.PageSize, page * this.PageSize), finalFeed.length);
+            callBack(headers.slice((page - 1) * this.PAGESIZE, page * this.PAGESIZE), finalFeed.length);
             return;
         }
         this.cs.clear();
         for (let source of sources) {
             let result = [];
-            let req = request(source.url, {
+            request(source.url, {
                 encoding: null
             }, (err, resp, data) => {
                 let rssData = data;
@@ -77,7 +77,7 @@ class NewsProvider {
                 }
                 if (isCompleted) {
                     finalFeed = finalFeed.sort(this.sorter);
-                    let sliced = finalFeed.slice(0, this.PageSize);
+                    let sliced = finalFeed.slice(0, this.PAGESIZE);
                     let totalCount = finalFeed.length;
                     callBack(sliced, totalCount);
                 }

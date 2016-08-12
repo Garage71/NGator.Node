@@ -12,8 +12,7 @@ class ContentStorage {
     private logoStorage = new Map<string, Buffer>();
     private callbacksQueue = new Map<string, ((data: Buffer) => void)[]>();
 
-
-    clear() {
+    clear(): void {
         this.articleStorage.clear();
         this.urlToUuidMap.clear();
         this.enclosureStorage.clear();
@@ -62,20 +61,21 @@ class ContentStorage {
         }
         return null;
     }
-         
+
     getArticlesBySource(source: si.IRSSSource): si.IArticleContainer[] {
         let articles: si.IArticleContainer[] = [];
         this.articleStorage.forEach((article) => {
-            if(article.header.source === source.name) {
+            if (article.header.source === source.name) {
                 articles.push(article);
             }
-        });        
+        });
         return articles;
     }
-            
+
     getArticleByUrl(url: string): si.IArticleContainer {
         let uuid = this.urlToUuidMap.get(url);
-        if (uuid) {this.articleStorage.get(uuid);
+        if (uuid) {
+            this.articleStorage.get(uuid);
         }
         return null;
     }
@@ -106,7 +106,7 @@ class ContentStorage {
 interface IContentStorageInstance {
     instance: {
         contentStorage: ContentStorage;
-    }
+    };
 }
 
 const CONTENT_STORAGE = Symbol.for('ContentStorage');

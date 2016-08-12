@@ -53,7 +53,7 @@ class RegnumParser extends abstractparser_1.AbstractParser {
             if (this.illustrationUrl || (pictNode && pictNode.attributes)) {
                 let url = this.illustrationUrl || pictNode.attributes['src'];
                 if (url && this.uuid) {
-                    binaryprovider_1.BinaryProvider.getBinaryData(url, (data) => {
+                    binaryprovider_1.BinaryProvider.GETBINARYDATA(url, (data) => {
                         contentstorage_1.ContentStorage.saveEnclosure(this.uuid, data);
                         if (!this.cbSent) {
                             this.cb({

@@ -27,7 +27,7 @@ export class RssSources {
                 };
             }
             return result;
-        }        
+        }
     }
 
 export default RssSources;

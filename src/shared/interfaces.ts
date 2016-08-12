@@ -17,7 +17,7 @@ export interface INewsHeader {
     link: string;
     description: string;
     publishDate: Date;
-    uuid: string;    
+    uuid: string;
     source: string;
     hasLogo: boolean;
     hasEnclosure: boolean;
@@ -29,14 +29,14 @@ export interface INewsHeaders {
     newsHeaders: INewsHeader[];
 }
 
-export interface IArticleContainer {    
-    uuid: string;        
-    rssSource: IRSSSource;        
-    header: INewsHeader;        
+export interface IArticleContainer {
+    uuid: string;
+    rssSource: IRSSSource;
+    header: INewsHeader;
     body: IBodyContainer;
 }
 
-export interface IBodyContainer {    
+export interface IBodyContainer {
     body: string;
     hasPicture: boolean;
 }

@@ -1,14 +1,15 @@
+/**
+ * Regular expressions helper class
+ */
 "use strict";
 class Helper {
-    static stripTags(text) {
+    static STRIPTAGS(text) {
         let stripped = this.htmlRegex[Symbol.replace](text, '');
-        let unquoted = this.quoteRegex[Symbol.replace](stripped, ' ');
-        return unquoted;
+        return this.quoteRegex[Symbol.replace](stripped, ' ');
     }
-    static removeDivAndScriptBlocks(text) {
+    static REMOVEDIVANDSCRPITBLOCKS(text) {
         let undived = this.divRegex[Symbol.replace](text, '');
-        let unscripted = this.scriptRegex[Symbol.replace](undived, '');
-        return unscripted;
+        return this.scriptRegex[Symbol.replace](undived, '');
     }
 }
 Helper.htmlRegex = /<.*?>/.compile();
