@@ -1,7 +1,6 @@
 ﻿
 import {AbstractParser} from './abstractparser';
 import * as si from '../../shared/interfaces';
-import {Helper} from '../helper';
 
 export class VzRuParser extends AbstractParser {
 
@@ -43,5 +42,5 @@ export class VzRuParser extends AbstractParser {
                 this.cbSent = true;
             }
         }
-    }    
+    }
 }

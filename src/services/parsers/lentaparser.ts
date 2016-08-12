@@ -6,8 +6,7 @@ import * as sax from 'sax';
 export class LentaParser extends AbstractParser {
 
     constructor(private cb: (articleBody: si.IBodyContainer) => void) {
-        super(cb);
-        
+        super(cb);        
     }
     
     protected  onopentag(tag) {

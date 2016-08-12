@@ -158,4 +158,22 @@ export abstract class AbstractParser {
 
     protected abstract onclosetag(tagname, currentTag): void;
 
+    protected getDescendantByAttributes(node: any, name: string, attribute: string, value: string): any {
+        if (node.name === name && node.attributes) {
+            let attr = node.attributes[attribute];
+            if (attr && attr.toString().includes(value)) {
+                return node;
+            }
+        }
+        if (node.children) {
+            for (let childNode of node.children) {
+                let result = this.getDescendantByAttributes(childNode, name, attribute, value);
+                if (result !== null) {
+                    return result;
+                }
+            }
+        }
+        return null;
+    }
+
 }

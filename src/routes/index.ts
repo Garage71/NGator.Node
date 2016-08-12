@@ -12,6 +12,7 @@ import {AbstractParser} from '../services/parsers/abstractparser';
 import {LentaParser} from '../services/parsers/lentaparser';
 import {NewsMailRuParser} from '../services/parsers/newsmailruparser';
 import {VzRuParser} from '../services/parsers/vzruparser';
+import {RegnumParser} from '../services/parsers/regnumparser';
 import {BinaryProvider} from '../services/binaryprovider';
 
 /// todo: implement Dependency Injection
@@ -49,6 +50,9 @@ router.get('/api/sources/article/:id',
             case 'VZ.ru':
                 encoding = 'cp1251';
                 parser = new VzRuParser(callback, article.uuid);
+                break;
+            case 'Regnum':                
+                parser = new RegnumParser(callback, article.uuid);
                 break;
             default:
                 res.status(404);

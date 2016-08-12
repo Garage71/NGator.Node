@@ -9,6 +9,7 @@ const contentstorage_1 = require('../services/contentstorage');
 const lentaparser_1 = require('../services/parsers/lentaparser');
 const newsmailruparser_1 = require('../services/parsers/newsmailruparser');
 const vzruparser_1 = require('../services/parsers/vzruparser');
+const regnumparser_1 = require('../services/parsers/regnumparser');
 const binaryprovider_1 = require('../services/binaryprovider');
 /// todo: implement Dependency Injection
 let router = express.Router();
@@ -40,6 +41,9 @@ router.get('/api/sources/article/:id', (req, res, next) => {
         case 'VZ.ru':
             encoding = 'cp1251';
             parser = new vzruparser_1.VzRuParser(callback, article.uuid);
+            break;
+        case 'Regnum':
+            parser = new regnumparser_1.RegnumParser(callback, article.uuid);
             break;
         default:
             res.status(404);
