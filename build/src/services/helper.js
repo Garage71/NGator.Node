@@ -14,6 +14,6 @@ class Helper {
 Helper.htmlRegex = /<.*?>/.compile();
 Helper.quoteRegex = /&.*?/.compile();
 Helper.divRegex = /<div\b[^>]*>(.*?)<\/div>/.compile();
-Helper.scriptRegex = new RegExp('(?<startTag><\s*script[^>]*>)(?<content>[\s\S]*?)(?<endTag><\s*/script[^>]*>)').compile();
+Helper.scriptRegex = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi.compile();
 exports.Helper = Helper;
 //# sourceMappingURL=helper.js.map

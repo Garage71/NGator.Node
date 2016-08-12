@@ -9,43 +9,8 @@ export class LentaParser extends AbstractParser {
         super(cb);
         
     }
-    parseArticle(article: si.IArticleContainer): void {
-        this.getArticle(article.header.link,
-        (document) => {
-            this.parser.write(document);
-        });
-    }
-
-    write(xml: string) {
-        this.parser.write(xml).close();
-    };
-
-    openTag(tag) {
-        tag.parent = this.current_tag;
-        tag.children = [];
-        if (tag.parent) {
-            tag.parent.children.push(tag);
-        }
-        this.current_tag = tag;
-        this.onopentag(tag);
-    }
-
-    closeTag(tagname) {
-        this.onclosetag(tagname, this.current_tag);
-        if (this.current_tag && this.current_tag.parent) {
-            let p = this.current_tag.parent;
-            delete this.current_tag.parent;
-            this.current_tag = p;
-        }
-    }
-
-    onText(text) {
-        if (this.current_tag) {
-            this.current_tag.children.push(text);
-        }
-    }
-
-    private onopentag(tag) {
+    
+    protected  onopentag(tag) {
         if (tag.name === 'div') {
             if (tag.attributes) {
                 let attr = tag.attributes['itemprop'];
@@ -56,7 +21,7 @@ export class LentaParser extends AbstractParser {
         }
     }
 
-    private onclosetag(tagname, currentTag) {
+    protected onclosetag(tagname, currentTag) {
         if (tagname === 'div' && currentTag === this.article) {
             let articleText = '';
             let paragraphs = this.childrenByName(this.article, 'p');
@@ -68,15 +33,11 @@ export class LentaParser extends AbstractParser {
                         articleText = articleText + ' ' + child.children[0];
                     }
                 }
-            }            
+            }
             this.cb({
                 body: articleText,
                 hasPicture: true
             });
-        }  
-    }
-
-    onEnd() {
-
+        }
     }
 } 

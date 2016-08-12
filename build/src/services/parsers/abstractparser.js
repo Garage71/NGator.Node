@@ -1,3 +1,8 @@
+/**
+ *
+ * Base news parser class. Built on SAX
+ *
+ */
 "use strict";
 const request = require('request');
 const iconv = require('iconv');
@@ -36,7 +41,7 @@ class AbstractParser {
             if (!err) {
                 let converted = data;
                 if (encoding) {
-                    let encoder = new iconv.Iconv(encoding, 'utf8');
+                    const encoder = new iconv.Iconv(encoding, 'utf8');
                     converted = encoder.convert(data);
                 }
                 callback(converted.toString());
@@ -62,7 +67,7 @@ class AbstractParser {
         return html.replace(/<script.*<\/script>/gi, '');
     }
     childByName(parent, name) {
-        let children = parent.children || [];
+        const children = parent.children || [];
         for (let i = 0; i < children.length; i++) {
             if (children[i].name === name) {
                 return children[i];
@@ -71,8 +76,8 @@ class AbstractParser {
         return null;
     }
     childrenByName(parent, name) {
-        let children = parent.children || [];
-        let result = [];
+        const children = parent.children || [];
+        const result = [];
         for (let i = 0; i < children.length; i++) {
             if (children[i].name === name) {
                 result.push(children[i]);
@@ -81,15 +86,48 @@ class AbstractParser {
         return result;
     }
     childData(parent, name, separator = '') {
-        let node = this.childByName(parent, name);
+        const node = this.childByName(parent, name);
         if (!node) {
             return '';
         }
-        let children = node.children;
+        const children = node.children;
         if (!children.length) {
             return '';
         }
         return children.join(separator);
+    }
+    parseArticle(article, encoding) {
+        this.getArticle(article.header.link, (document) => {
+            this.parser.write(document);
+        }, encoding);
+    }
+    write(xml) {
+        this.parser.write(xml).close();
+    }
+    ;
+    openTag(tag) {
+        tag.parent = this.current_tag;
+        tag.children = [];
+        if (tag.parent) {
+            tag.parent.children.push(tag);
+        }
+        this.current_tag = tag;
+        this.onopentag(tag);
+    }
+    closeTag(tagname) {
+        this.onclosetag(tagname, this.current_tag);
+        if (this.current_tag && this.current_tag.parent) {
+            const p = this.current_tag.parent;
+            delete this.current_tag.parent;
+            this.current_tag = p;
+        }
+    }
+    onText(text) {
+        if (this.current_tag) {
+            this.current_tag.children.push(text);
+        }
+    }
+    onEnd() {
     }
 }
 exports.AbstractParser = AbstractParser;

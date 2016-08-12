@@ -11,6 +11,7 @@ import {ContentStorage} from '../services/contentstorage';
 import {AbstractParser} from '../services/parsers/abstractparser';
 import {LentaParser} from '../services/parsers/lentaparser';
 import {NewsMailRuParser} from '../services/parsers/newsmailruparser';
+import {VzRuParser} from '../services/parsers/vzruparser';
 import {BinaryProvider} from '../services/binaryprovider';
 
 /// todo: implement Dependency Injection
@@ -37,6 +38,7 @@ router.get('/api/sources/article/:id',
         let articleID = req.params['id'];
         let article = cs.getArticleByUuid(articleID);
         let parser: AbstractParser = null;
+        let encoding = null;
         switch(article.rssSource.name) {
             case 'Lenta.ru':
                 parser = new LentaParser(callback);
@@ -44,11 +46,15 @@ router.get('/api/sources/article/:id',
             case 'News.mail.ru':
                 parser = new NewsMailRuParser(callback, article.uuid);
                 break;
+            case 'VZ.ru':
+                encoding = 'cp1251';
+                parser = new VzRuParser(callback, article.uuid);
+                break;
             default:
                 res.status(404);
         }
         if (parser) {
-            parser.parseArticle(article);
+            parser.parseArticle(article, encoding);
         }
     });
 

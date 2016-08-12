@@ -8,6 +8,7 @@ const newsProvider = require('../services/newsprovider');
 const contentstorage_1 = require('../services/contentstorage');
 const lentaparser_1 = require('../services/parsers/lentaparser');
 const newsmailruparser_1 = require('../services/parsers/newsmailruparser');
+const vzruparser_1 = require('../services/parsers/vzruparser');
 const binaryprovider_1 = require('../services/binaryprovider');
 /// todo: implement Dependency Injection
 let router = express.Router();
@@ -28,6 +29,7 @@ router.get('/api/sources/article/:id', (req, res, next) => {
     let articleID = req.params['id'];
     let article = cs.getArticleByUuid(articleID);
     let parser = null;
+    let encoding = null;
     switch (article.rssSource.name) {
         case 'Lenta.ru':
             parser = new lentaparser_1.LentaParser(callback);
@@ -35,11 +37,15 @@ router.get('/api/sources/article/:id', (req, res, next) => {
         case 'News.mail.ru':
             parser = new newsmailruparser_1.NewsMailRuParser(callback, article.uuid);
             break;
+        case 'VZ.ru':
+            encoding = 'cp1251';
+            parser = new vzruparser_1.VzRuParser(callback, article.uuid);
+            break;
         default:
             res.status(404);
     }
     if (parser) {
-        parser.parseArticle(article);
+        parser.parseArticle(article, encoding);
     }
 });
 router.get('/api/sources/picture/:id', (req, res, next) => {

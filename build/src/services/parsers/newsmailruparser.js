@@ -8,37 +8,6 @@ class NewsMailRuParser extends abstractparser_1.AbstractParser {
         this.cb = cb;
         this.articleId = articleId;
     }
-    parseArticle(article) {
-        this.getArticle(article.header.link, (document) => {
-            this.parser.write(document);
-        });
-    }
-    write(xml) {
-        this.parser.write(xml).close();
-    }
-    ;
-    openTag(tag) {
-        tag.parent = this.current_tag;
-        tag.children = [];
-        if (tag.parent) {
-            tag.parent.children.push(tag);
-        }
-        this.current_tag = tag;
-        this.onopentag(tag);
-    }
-    closeTag(tagname) {
-        this.onclosetag(tagname, this.current_tag);
-        if (this.current_tag && this.current_tag.parent) {
-            let p = this.current_tag.parent;
-            delete this.current_tag.parent;
-            this.current_tag = p;
-        }
-    }
-    onText(text) {
-        if (this.current_tag) {
-            this.current_tag.children.push(text);
-        }
-    }
     onopentag(tag) {
         if (tag.name === 'div') {
             if (tag.attributes) {
@@ -88,8 +57,6 @@ class NewsMailRuParser extends abstractparser_1.AbstractParser {
                 }
             }
         }
-    }
-    onEnd() {
     }
     getDescendantByAttributes(node, name, attribute, value) {
         if (node.name === name && node.attributes) {
