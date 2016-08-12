@@ -1,4 +1,8 @@
-﻿import {AbstractParser} from './abstractparser';
+﻿/**
+* Regnum article parser implementation
+*/
+
+import {AbstractParser} from './abstractparser';
 import * as si from '../../shared/interfaces';
 import {BinaryProvider} from '../binaryprovider';
 import {ContentStorage} from '../contentstorage';
@@ -8,10 +12,10 @@ export class RegnumParser extends AbstractParser {
     private illustration: any;
     private illustrationUrl: string;
     private articleText: string;
-    constructor(private cb: (articleBody: si.IBodyContainer) => void, private articleId = '') {
+    constructor(private cb: (articleBody: si.IBodyContainer) => void, private articleId: string = '') {
         super(cb, articleId);
     }
-    protected onopentag(tag) {
+    protected onopentag(tag: any): void {
         if (tag.name === 'div') {
             if (tag.attributes) {
                 let attr = tag.attributes['class'];
@@ -29,7 +33,7 @@ export class RegnumParser extends AbstractParser {
         }
     }
 
-    protected onclosetag(tagname, currentTag) {
+    protected onclosetag(tagname: string, currentTag: any): void {
         if (tagname === 'div' && currentTag === this.article) {
             if (!this.articleText) {
                 let paragraphs = this.childrenByName(this.article, 'p');
@@ -50,14 +54,14 @@ export class RegnumParser extends AbstractParser {
                 }
                 this.articleText = articleText;
             }
-            let pictNode = this.getDescendantByAttributes(currentTag, 'img', 'class', 'main_image');                
+            let pictNode = this.getDescendantByAttributes(currentTag, 'img', 'class', 'main_image');
             if (this.illustrationUrl || (pictNode && pictNode.attributes)) {
                 let url = this.illustrationUrl || pictNode.attributes['src'];
                 if (url && this.uuid) {
                     BinaryProvider.GETBINARYDATA(url,
                         (data: Buffer) => {
                             ContentStorage.saveEnclosure(this.uuid, data);
-                            if(!this.cbSent) {
+                            if (!this.cbSent) {
                                 this.cb({
                                     body: this.articleText,
                                     hasPicture: true
@@ -67,7 +71,7 @@ export class RegnumParser extends AbstractParser {
                         });
                 }
             } else {
-                if(!this.cbSent) {
+                if (!this.cbSent) {
                     this.cb({
                         body: this.articleText,
                         hasPicture: false
@@ -78,6 +82,5 @@ export class RegnumParser extends AbstractParser {
         } else if (tagname === 'img' && currentTag === this.illustration) {
             this.illustrationUrl = currentTag.attributes['src'];
         }
-    } 
-        
+    }
 }

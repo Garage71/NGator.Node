@@ -1,14 +1,17 @@
-﻿
+﻿/**
+*    VZ.ru article parser implementation
+*/
+
 import {AbstractParser} from './abstractparser';
 import * as si from '../../shared/interfaces';
 
 export class VzRuParser extends AbstractParser {
 
     private cbSent = false;
-    constructor(private cb: (articleBody: si.IBodyContainer) => void, private articleId = '') {
+    constructor(private cb: (articleBody: si.IBodyContainer) => void, private articleId: string = '') {
         super(cb, articleId);
     }
-    protected onopentag(tag) {
+    protected onopentag(tag: any): void {
         if (tag.name === 'div') {
             if (tag.attributes) {
                 let attr = tag.attributes['class'];
@@ -19,7 +22,7 @@ export class VzRuParser extends AbstractParser {
         }
     }
 
-    protected onclosetag(tagname, currentTag) {
+    protected onclosetag(tagname: string, currentTag: any): void {
         if (tagname === 'div' && currentTag === this.article) {
             let paragraphs = this.childrenByName(this.article, 'p');
             let articleText = '';

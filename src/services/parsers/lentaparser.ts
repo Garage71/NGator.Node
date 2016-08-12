@@ -1,15 +1,17 @@
-﻿
+﻿/**
+* Implementation of Lenta.ru article parser
+*/
+
 import {AbstractParser} from './abstractparser';
 import * as si from '../../shared/interfaces';
-import * as sax from 'sax';
 
 export class LentaParser extends AbstractParser {
 
     constructor(private cb: (articleBody: si.IBodyContainer) => void) {
-        super(cb);        
+        super(cb);
     }
-    
-    protected  onopentag(tag) {
+
+    protected onopentag(tag: any): void {
         if (tag.name === 'div') {
             if (tag.attributes) {
                 let attr = tag.attributes['itemprop'];
@@ -20,7 +22,7 @@ export class LentaParser extends AbstractParser {
         }
     }
 
-    protected onclosetag(tagname, currentTag) {
+    protected onclosetag(tagname: string, currentTag: any): void {
         if (tagname === 'div' && currentTag === this.article) {
             let articleText = '';
             let paragraphs = this.childrenByName(this.article, 'p');

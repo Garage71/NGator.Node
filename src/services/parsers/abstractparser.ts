@@ -4,25 +4,23 @@
  *
  */
 
-
 import * as si from '../../shared/interfaces';
 import * as request from 'request';
 import {IncomingMessage} from 'http';
 import * as iconv from 'iconv';
 import * as sax from 'sax';
-import {ContentStorage} from '../contentstorage';
+
 export abstract class AbstractParser {
 
-    protected parser = new sax.SAXParser(true,
-    {
+    protected parser = new sax.SAXParser(true, {
         trim: true,
         normalize: true
     });
-    protected current_tag: any;
+    protected currentTag: any;
     protected error: any;
     protected article: any;
 
-    constructor(private callback: (articleBody: si.IBodyContainer) => void, protected uuid = '') {
+    constructor(private callback: (articleBody: si.IBodyContainer) => void, protected uuid: string = '') {
         this.parser.onopentag = (tag) => {
             this.openTag(tag);
         };
@@ -44,7 +42,7 @@ export abstract class AbstractParser {
         };
     }
 
-    protected getArticle(url: string, callback: (document: string) => void, encoding = null): void {
+    protected getArticle(url: string, callback: (document: string) => void, encoding: string = null): void {
         request.get(url, {
             encoding: null
         },
@@ -80,29 +78,29 @@ export abstract class AbstractParser {
         return html.replace(/<script.*<\/script>/gi, '');
     }
 
-    protected childByName(parent, name) {
+    protected childByName(parent: any, name: string): any {
         const children = parent.children || [];
-        for (let i = 0; i < children.length; i++) {
-            if (children[i].name === name) {
-                return children[i];
+        for (let child of children) {
+            if (child.name === name) {
+                return child;
             }
         }
         return null;
     }
 
-    protected childrenByName(parent, name) {
+    protected childrenByName(parent: any, name: string): any {
         const children = parent.children || [];
         const result = [];
-        for (let i = 0; i < children.length; i++) {
-            if (children[i].name === name) {
-                result.push(children[i]);
+        for (let child of children) {
+            if (child.name === name) {
+                result.push(child);
             }
         }
         return result;
     }
 
 
-    protected childData(parent: any, name: string, separator = ''): string {
+    protected childData(parent: any, name: string, separator: string = ''): string {
         const node = this.childByName(parent, name);
         if (!node) {
             return '';
@@ -114,50 +112,50 @@ export abstract class AbstractParser {
         return children.join(separator);
     }
 
-    parseArticle(article: si.IArticleContainer, encoding: any): void {                           
+    parseArticle(article: si.IArticleContainer, encoding: any): void {
             this.getArticle(article.header.link,
                 (document) => {
                     this.parser.write(document);
                 },
-                encoding);        
+                encoding);
     }
 
-    write(xml: string) {
+    write(xml: string): void {
         this.parser.write(xml).close();
     };
 
-    protected openTag(tag) {
-        tag.parent = this.current_tag;
+    protected openTag(tag: any): void {
+        tag.parent = this.currentTag;
         tag.children = [];
         if (tag.parent) {
             tag.parent.children.push(tag);
         }
-        this.current_tag = tag;
+        this.currentTag = tag;
         this.onopentag(tag);
     }
 
-    protected closeTag(tagname) {
-        this.onclosetag(tagname, this.current_tag);
-        if (this.current_tag && this.current_tag.parent) {
-            const p = this.current_tag.parent;
-            delete this.current_tag.parent;
-            this.current_tag = p;
+    protected closeTag(tagname: string): void {
+        this.onclosetag(tagname, this.currentTag);
+        if (this.currentTag && this.currentTag.parent) {
+            const p = this.currentTag.parent;
+            delete this.currentTag.parent;
+            this.currentTag = p;
         }
     }
 
-    protected onText(text) {
-        if (this.current_tag) {
-            this.current_tag.children.push(text);
+    protected onText(text: string): void {
+        if (this.currentTag) {
+            this.currentTag.children.push(text);
         }
     }
 
-    protected onEnd() {
-
+    protected onEnd(): void {
+        return;
     }
 
-    protected abstract onopentag(tag): void;
+    protected abstract onopentag(tag: any): void;
 
-    protected abstract onclosetag(tagname, currentTag): void;
+    protected abstract onclosetag(tagname: string, currentTag: any): void;
 
     protected getDescendantByAttributes(node: any, name: string, attribute: string, value: string): any {
         if (node.name === name && node.attributes) {
@@ -176,5 +174,4 @@ export abstract class AbstractParser {
         }
         return null;
     }
-
 }

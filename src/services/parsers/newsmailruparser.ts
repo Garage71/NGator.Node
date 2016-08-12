@@ -1,15 +1,18 @@
-﻿
+﻿/**
+* News.mail.ru article parser implementations
+*/
+
 import {AbstractParser} from './abstractparser';
 import * as si from '../../shared/interfaces';
 import {BinaryProvider} from '../binaryprovider';
 import {ContentStorage} from '../contentstorage';
 
 export class NewsMailRuParser extends AbstractParser {
-    constructor(private cb: (articleBody: si.IBodyContainer) => void, private articleId = '') {
+    constructor(private cb: (articleBody: si.IBodyContainer) => void, private articleId: string = '') {
         super(cb, articleId);
     }
-    
-    protected onopentag(tag) {
+
+    protected onopentag(tag: any): void {
         if (tag.name === 'div') {
             if (tag.attributes) {
                 let attr = tag.attributes['class'];
@@ -20,7 +23,7 @@ export class NewsMailRuParser extends AbstractParser {
         }
     }
 
-    protected onclosetag(tagname, currentTag) {
+    protected onclosetag(tagname: string, currentTag: any): void {
         if (tagname === 'div' && currentTag === this.article) {
             let textNode = this.getDescendantByAttributes(currentTag, 'div', 'class', 'article__item_html');
             if (textNode) {
@@ -37,7 +40,7 @@ export class NewsMailRuParser extends AbstractParser {
                         }
                     }
                 }
-                let pictNode = this.getDescendantByAttributes(currentTag, 'img', 'class', 'photo__pic');                
+                let pictNode = this.getDescendantByAttributes(currentTag, 'img', 'class', 'photo__pic');
                 if (pictNode && pictNode.attributes) {
                     let url = pictNode.attributes['src'];
                     if (url && this.uuid) {
@@ -56,7 +59,7 @@ export class NewsMailRuParser extends AbstractParser {
                         hasPicture: false
                     });
                 }
-            }            
+            }
         }
-    }        
+    }
 }
