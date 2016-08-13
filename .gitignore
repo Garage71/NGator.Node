@@ -3,3 +3,4 @@ obj/
 .vs/
 .idea/
 bin/Microsoft.NodejsTools.WebRole.dll
+/public/app./public/app

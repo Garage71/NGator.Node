@@ -6,9 +6,9 @@ var GulpConfigClient = (function () {
         this.source = './public/app';
         this.sourceApp = this.source + '.';
 
-        this.tsOutputPath = this.source + './';
+        this.tsOutputPath = '.';
         this.allJavaScript = [this.source + '/js/**/*.js'];
-        this.allTypeScript = this.sourceApp + '/**/*.ts';
+        this.allTypeScript = this.source + '/*.ts';
 
         this.typings = './typings/';
         this.libraryTypeScriptDefinitions = './typings/main/**/*.ts';
