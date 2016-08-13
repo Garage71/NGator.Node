@@ -19,6 +19,9 @@
     "gulp": "^3.9.1",
     "gulp-debug": "^2.1.2",
     "gulp-inject": "^4.1.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-tslint": "^6.0.1",
+    "gulp-typescript": "^2.13.6",
     "hbs": "^4.0.0",
     "iconv": "^2.2.1",
     "memory-streams": "^0.1.0",
@@ -30,10 +33,8 @@
     "serve-favicon": "~2.3.0",
     "superstatic": "^4.0.3",
     "tslint": "^3.13.0",
+    "tslint-microsoft-contrib": "^2.0.9",
     "typescript": "^1.8.10",
-    "vinyl": "^1.1.1",
-    "gulp-tslint": "^6.0.1",
-    "gulp-typescript": "^2.13.6",
-    "tslint-microsoft-contrib": "^2.0.9"
-  }  
+    "vinyl": "^1.1.1"
+  }
 }
