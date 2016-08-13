@@ -5,6 +5,9 @@
   "scripts": {
     "start": "node ./bin/www"
   },
+  "engines": {
+    "node": ">=6.3.0"
+  },
   "dependencies": {
     "body-parser": "~1.15.1",
     "bower": "^1.7.9",
@@ -12,12 +15,12 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
     "del": "^2.2.1",
-    "express": "~4.13.4",    
+    "express": "~4.13.4",
     "gulp": "^3.9.1",
     "gulp-debug": "^2.1.2",
     "gulp-inject": "^4.1.0",
     "hbs": "^4.0.0",
-    "iconv": "^2.2.1",    
+    "iconv": "^2.2.1",
     "memory-streams": "^0.1.0",
     "morgan": "~1.7.0",
     "nconf": "^0.8.4",
@@ -28,11 +31,9 @@
     "superstatic": "^4.0.3",
     "tslint": "^3.13.0",
     "typescript": "^1.8.10",
-    "vinyl": "^1.1.1"
-  },
-  "devDependencies": {
+    "vinyl": "^1.1.1",
     "gulp-tslint": "^6.0.1",
     "gulp-typescript": "^2.13.6",
     "tslint-microsoft-contrib": "^2.0.9"
-  }
+  }  
 }
