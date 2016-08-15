@@ -24,15 +24,16 @@ module app {
     }
 
     export class RssSourcesController {
-        static $inject = ['$http'];
+        static $inject = ['$http', '$scope'];
         sources: si.IRSSSource[] = [];
         newsHeaders: si.INewsHeader[] = [];
         newsList = [];
-        loadButtonEnabled = true;
+        isLoadingNews = false;
         selectedSources: si.IRSSSource[] = [];
         totalItems: number;
         maxSize = 10;
         currentPage = 1;
+        progress = 0;
 
         private articlesRequest = {
             rssSources: [],
@@ -40,11 +41,14 @@ module app {
             currentPage: 1
         };
 
-        constructor(private $http: ng.IHttpService) {
+        constructor(private $http: ng.IHttpService, private socket: any) {
             $http.get('/api/sources').then((response: any) => {
                 let container = response.data as si.IRSSSources;
                 this.sources = container.rsssources;
                 this.selectedSources.push(this.sources[0]);
+                this.socket.on('progress', (data: number): void => {
+                    this.progress = data;
+                });
             });
         }
 
@@ -57,11 +61,14 @@ module app {
             }
             this.newsList = [];
             this.totalItems = 0;
+            this.isLoadingNews = true;
             this.$http.post('/api/sources', this.articlesRequest).then((response: any) => {
                 let container = response.data as si.INewsHeaders;
                 this.newsHeaders = container.newsHeaders;
                 this.newsList = this.processNewsList(this.newsHeaders);
                 this.totalItems = container.totalArticlesCount;
+                this.isLoadingNews = false;
+                this.progress = 0;
             });
         }
 
@@ -138,7 +145,7 @@ module app {
     angular.module('app')
         .controller('RssSourcesController',
         [
-            '$http', ($http: ng.IHttpService) => {
-                return new RssSourcesController($http);
+            '$http', 'socket', ($http: ng.IHttpService, socket: any) => {
+                return new RssSourcesController($http, socket);
             }]);
 }

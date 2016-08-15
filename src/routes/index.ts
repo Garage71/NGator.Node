@@ -15,6 +15,7 @@ import {VzRuParser} from '../services/parsers/vzruparser';
 import {RegnumParser} from '../services/parsers/regnumparser';
 import {NewsRamblerRuParser} from '../services/parsers/newsramblerparser';
 import {BinaryProvider} from '../services/binaryprovider';
+import app from '../app';
 
 /// todo: implement Dependency Injection
 let router = express.Router();
@@ -106,13 +107,20 @@ router.get('/api/sources',
     });
 
 router.post('/api/sources', (req, res, next) => {
-    news.getNews(req.body.rssSources, req.body.currentPage, req.body.refresh, (newsFeed: si.INewsHeader[], totalCount: number) => {
+    news.getNews(req.body.rssSources,
+        req.body.currentPage,
+        req.body.refresh,
+        (newsFeed: si.INewsHeader[], totalCount: number) => {
         let result: si.INewsHeaders = {
             newsHeaders: newsFeed,
             totalArticlesCount: totalCount
         };
         res.status(200).json(result);
-    });
+        },
+        (progress: number) => {
+            app.io.emit('progress', progress);
+        }
+    );
 });
 
 export default router;

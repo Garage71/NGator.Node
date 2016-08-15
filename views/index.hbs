@@ -1,8 +1,12 @@
 ﻿<head>
     <meta charset="utf-8"/>
 </head>
-<div class="jumbotron" ng-show="vm.newsList.length === 0">
+<div class="jumbotron" ng-show="vm.newsList.length === 0 && !vm.isLoadingNews">
     <h3 align="center">Please select news sources</h3>
+</div>
+<div class="jumbotron" ng-show="vm.isLoadingNews">
+    <h3 align="center">Loading news list, please wait</h3>
+    <uib-progressbar align="center" max="100" value="vm.progress"><span style="color:white; white-space:nowrap;">\{{vm.progress}}% completed</span></uib-progressbar>
 </div>
 <br>
 <br>

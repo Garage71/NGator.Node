@@ -9,6 +9,7 @@ import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 import * as routes from './routes/index';
+import * as socketIo from 'socket.io';
 
 interface IPipelineError extends Error {
     name: string;
@@ -17,9 +18,14 @@ interface IPipelineError extends Error {
     status: number;
 }
 
-//import * as users from './routes/users';
+interface IApplication extends express.Express {
+    io?: SocketIO.Server;
+}
 
-let app = express();
+// socket.io attach
+let app: IApplication = express();
+let io = socketIo();
+app.io = io;
 
 // view engine setup
 app.set('views', path.join(__dirname, '../../views'));
@@ -31,7 +37,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
- app.use(express.static(path.join(__dirname, '../../public')));
+app.use(express.static(path.join(__dirname, '../../public')));
 
 app.use('/', routes.default);
 //app.use('/users', users);
@@ -72,6 +78,5 @@ app.use((err: IPipelineError, req: express.Request, res: express.Response, next:
         error: {}
     });
 });
-
 
 export default app;

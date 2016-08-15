@@ -93,6 +93,14 @@
     <Content Include="public\bower\angular-sanitize\LICENSE.md" />
     <Content Include="public\bower\angular-sanitize\package.json" />
     <Content Include="public\bower\angular-sanitize\README.md" />
+    <Content Include="public\bower\angular-socket-io\.bower.json" />
+    <Content Include="public\bower\angular-socket-io\.gitignore" />
+    <Content Include="public\bower\angular-socket-io\.travis.yml" />
+    <Content Include="public\bower\angular-socket-io\bower.json" />
+    <Content Include="public\bower\angular-socket-io\npm-install.sh" />
+    <Content Include="public\bower\angular-socket-io\package.json" />
+    <Content Include="public\bower\angular-socket-io\README.md" />
+    <Content Include="public\bower\angular-socket-io\socket.min.js.map" />
     <Content Include="public\bower\angular-ui-select\.bower.json" />
     <Content Include="public\bower\angular-ui-select\bower.json" />
     <Content Include="public\bower\angular-ui-select\CHANGELOG.md" />
@@ -268,6 +276,13 @@
     <Content Include="public\bower\jquery\LICENSE.txt" />
     <Content Include="public\bower\jquery\README.md" />
     <Content Include="public\bower\jquery\src\.jshintrc" />
+    <Content Include="public\bower\ng-socket\bower.json" />
+    <Content Include="public\bower\ng-socket\LICENSE" />
+    <Content Include="public\bower\ng-socket\README.md" />
+    <Content Include="public\bower\ngSocket\.bower.json" />
+    <Content Include="public\bower\ngSocket\bower.json" />
+    <Content Include="public\bower\ngSocket\CONTRIBUTING.md" />
+    <Content Include="public\bower\ngSocket\LICENSE" />
     <Content Include="public\bower\select\.bower.json" />
     <Content Include="public\bower\select\.editorconfig" />
     <Content Include="public\bower\select\.gitignore" />
@@ -313,6 +328,12 @@
     <Compile Include="public\bower\angular-sanitize\angular-sanitize.js" />
     <Compile Include="public\bower\angular-sanitize\angular-sanitize.min.js" />
     <Compile Include="public\bower\angular-sanitize\index.js" />
+    <Compile Include="public\bower\angular-socket-io\gulpfile.js" />
+    <Compile Include="public\bower\angular-socket-io\karma.conf.js" />
+    <Compile Include="public\bower\angular-socket-io\mock\socket-io.js" />
+    <Compile Include="public\bower\angular-socket-io\socket.js" />
+    <Compile Include="public\bower\angular-socket-io\socket.min.js" />
+    <Compile Include="public\bower\angular-socket-io\socket.spec.js" />
     <Compile Include="public\bower\angular-ui-select\dist\select.js" />
     <Compile Include="public\bower\angular-ui-select\dist\select.min.js" />
     <Compile Include="public\bower\angular-ui-select\docs\assets\app.js" />
@@ -516,6 +537,7 @@
     <Compile Include="public\bower\jquery\src\var\support.js" />
     <Compile Include="public\bower\jquery\src\var\toString.js" />
     <Compile Include="public\bower\jquery\src\wrap.js" />
+    <Compile Include="public\bower\ng-socket\ngSocket.js" />
     <Compile Include="public\bower\select\dist\select.js" />
     <Compile Include="public\bower\select\karma.conf.js" />
     <Compile Include="public\bower\select\src\select.js" />
@@ -532,6 +554,7 @@
     <Content Include="typings\globals\node-uuid\typings.json" />
     <Content Include="typings\globals\node\typings.json" />
     <Content Include="typings\globals\sax\typings.json" />
+    <Content Include="typings\globals\socket.io\typings.json" />
     <Content Include="typings\globals\underscore\typings.json" />
     <Content Include="typings\modules\request\typings.json" />
     <Content Include="views\index.hbs" />
@@ -570,6 +593,7 @@
     <TypeScriptCompile Include="typings\globals\node\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\sax\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\serve-static\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\socket.io\index.d.ts" />
     <TypeScriptCompile Include="typings\globals\underscore\index.d.ts" />
     <TypeScriptCompile Include="typings\index.d.ts" />
     <Content Include="typings\globals\express-serve-static-core\typings.json" />
@@ -595,6 +619,8 @@
     <Folder Include="public\bower\angular-resource\" />
     <Folder Include="public\bower\angular-route\" />
     <Folder Include="public\bower\angular-sanitize\" />
+    <Folder Include="public\bower\angular-socket-io\" />
+    <Folder Include="public\bower\angular-socket-io\mock\" />
     <Folder Include="public\bower\angular-ui-select\" />
     <Folder Include="public\bower\angular-ui-select\dist\" />
     <Folder Include="public\bower\angular-ui-select\docs\" />
@@ -708,6 +734,7 @@
     <Folder Include="public\bower\jquery\src\traversing\" />
     <Folder Include="public\bower\jquery\src\traversing\var\" />
     <Folder Include="public\bower\jquery\src\var\" />
+    <Folder Include="public\bower\ng-socket\" />
     <Folder Include="public\bower\select\" />
     <Folder Include="public\bower\select\demo\" />
     <Folder Include="public\bower\select\dist\" />
@@ -738,6 +765,7 @@
     <Folder Include="typings\globals\node\" />
     <Folder Include="typings\globals\sax\" />
     <Folder Include="typings\globals\serve-static\" />
+    <Folder Include="typings\globals\socket.io\" />
     <Folder Include="typings\globals\underscore\" />
     <Folder Include="typings\modules\" />
     <Folder Include="typings\modules\request\" />

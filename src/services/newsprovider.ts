@@ -13,9 +13,13 @@ export class NewsProvider {
 
     private PAGESIZE = 10;
     private cs = ContentStorage;
-    getNews(sources: si.IRSSSource[], page: number, refresh: boolean, callBack: (newsFeed: si.INewsHeader[], totalCount: number) => void):
+    getNews(sources: si.IRSSSource[],
+        page: number,
+        refresh: boolean,
+        callBack: (newsFeed: si.INewsHeader[], totalCount: number) => void,
+        progressReporter: (progress: number) => void):
         void {
-
+        //let reporter = new ProgressReporter();
         let feed: Map<si.IRSSSource, {
             sourceFeed: si.INewsHeader[],
             isLoaded: boolean,
@@ -38,7 +42,9 @@ export class NewsProvider {
             return;
         }
         this.cs.clear();
-
+        let totalSourcesCount = sources.length;
+        let currentCount = 0;
+        const step = 100 / totalSourcesCount;
         for (let source of sources) {
             let result: si.INewsHeader[] = [];
             request(source.url, {
@@ -51,48 +57,52 @@ export class NewsProvider {
                     }
 
                     let parser = new rssParser.RssParser((headers: si.INewsHeader[]) => {
-                    for (let header of headers) {
-                        header.source = source.name;
-                        let body: si.IBodyContainer = {
-                            body: '',
-                            hasPicture: header.hasEnclosure
-                        };
-                        let article: si.IArticleContainer = {
-                            uuid: header.uuid,
-                            rssSource: source,
-                            header: header,
-                            body: body
-                        };
-                        this.cs.saveArticle(article);
-                        result.push(header);
-                    }
-                    feed.set(source, {
-                            sourceFeed: result,
-                            isLoaded: true
-                        });
-                });
-                parser.parse(rssData.toString(), source);
+                        for (let header of headers) {
+                            header.source = source.name;
+                            let body: si.IBodyContainer = {
+                                body: '',
+                                hasPicture: header.hasEnclosure
+                            };
+                            let article: si.IArticleContainer = {
+                                uuid: header.uuid,
+                                rssSource: source,
+                                header: header,
+                                body: body
+                            };
+                            this.cs.saveArticle(article);
+                            result.push(header);
+                        }
+                        feed.set(source, {
+                                sourceFeed: result,
+                                isLoaded: true
+                            });
+                    });
+                    parser.parse(rssData.toString(), source);
 
-                let isCompleted = true;
-                let finalFeed: si.INewsHeader[] = [];
-                for (let src of feed) {
-                    let sourceFeed = src['1'];
-                    if (!sourceFeed.isLoaded) {
-                        isCompleted = false;
-                    } else {
-                        for (let header of sourceFeed.sourceFeed) {
-                            finalFeed.push(header);
+                    let isCompleted = true;
+                    let finalFeed: si.INewsHeader[] = [];
+                    for (let src of feed) {
+                        let sourceFeed = src['1'];
+                        if (!sourceFeed.isLoaded) {
+                            isCompleted = false;
+                        } else {
+                            for (let header of sourceFeed.sourceFeed) {
+                                finalFeed.push(header);
+                            }
                         }
                     }
-                }
-
-                if (isCompleted) {
-                    finalFeed = finalFeed.sort(this.sorter);
-                    let sliced = finalFeed.slice(0, this.PAGESIZE);
-                    let totalCount = finalFeed.length;
-                    callBack(sliced, totalCount);
-                }
-            });
+                    if (isCompleted) {
+                        finalFeed = finalFeed.sort(this.sorter);
+                        let sliced = finalFeed.slice(0, this.PAGESIZE);
+                        let totalCount = finalFeed.length;
+                        currentCount++;
+                        progressReporter(100);
+                        callBack(sliced, totalCount);
+                    } else {
+                        currentCount++;
+                        progressReporter(currentCount * step);
+                    }
+                });
         }
     }
 

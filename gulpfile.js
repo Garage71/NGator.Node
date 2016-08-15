@@ -74,10 +74,15 @@ gulp.task('compile-ts-frontend', function () {
 gulp.task('clean-ts', function (cb) {
     var typeScriptGenFiles = [
         backendConfig.tsOutputPath + '/**/*.js',    // path to all JS files auto gen'd by editor
-        backendConfig.tsOutputPath + '/**/*.js.map', // path to all sourcemap files auto gen'd by editor
-        frontendConfig.tsOutputPath + '/*.js',
-        frontendConfig.tsOutputPath + '/*.js.map',
-        '!' + backendConfig.tsOutputPath + '/lib'
+        backendConfig.tsOutputPath + '/**/*.js.map', // path to all sourcemap files auto gen'd by editor,
+        backendConfig.source + '/shared/**/*.js',    
+        backendConfig.source + '/shared/**/*.js.map', 
+        frontendConfig.source + '/*.js',
+        frontendConfig.source + '/*.js.map',
+        '!' + backendConfig.tsOutputPath + '/lib',
+        '!gulpfile.js',
+        '!gulpfile.config.backeng.js',
+        '!gulpfile.config.frontend.js'
     ];
 
     // delete the files

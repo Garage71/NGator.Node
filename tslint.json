@@ -62,7 +62,7 @@
     "no-function-constructor-with-string-args": true,
     "no-function-expression": true,
     "no-http-string": [ true, "http://www.example.com/?.*", "http://www.examples.com/?.*" ],
-    "no-increment-decrement": true,
+    "no-increment-decrement": false,
     "no-inferrable-types": false,
     "no-inner-html": true,
     "no-internal-module": false,

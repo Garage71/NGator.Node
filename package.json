@@ -9,9 +9,11 @@
     "node": ">=6.3.0"
   },
   "dependencies": {
+    "bindings": "^1.2.1",
     "body-parser": "~1.15.1",
     "bower": "^1.7.9",
     "browser-sync": "^2.13.0",
+    "bufferutil": "^1.2.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
     "del": "^2.2.1",
@@ -31,10 +33,12 @@
     "node-uuid": "^1.4.7",
     "request": "^2.74.0",
     "serve-favicon": "~2.3.0",
+    "socket.io": "^1.4.8",
     "superstatic": "^4.0.3",
     "tslint": "^3.13.0",
     "tslint-microsoft-contrib": "^2.0.9",
     "typescript": "^1.8.10",
-    "vinyl": "^1.1.1"
+    "vinyl": "^1.1.1",
+    "ws": "^1.1.1"
   }
 }
