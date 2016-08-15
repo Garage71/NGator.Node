@@ -6,7 +6,7 @@ Following technologies are used:
 
 - NodeJS v.6.3;
 - Express v.4 (+ socket.io);
-- Angular v.1.5 (+angular-ui);
+- Angular v.1.5 (+ angular-ui);
 - TypeScript v.1.8;
 - Gulp;
 - TSLint.
@@ -32,7 +32,7 @@ npm install
 ```
 and hit F5.
 
-If you use Windows development environment, you might encounter followin compilation error during installation: 
+If you use Windows development environment, you might encounter following compilation error during installation: 
 ```
 d:\Dev\GitHub\NGator.Node\node_modules\iconv>if not defined npm_config_node_gyp (node "D:\Program Files (x86)\nodejs\node_modules\npm\bin\node-gyp-bin\\..\..\node_modules\node-gyp\bin\node-gyp.js" rebuild )  else (node "" rebuild )
 Building the projects in this solution one at a time. To enable parallel build, please add the "/m" switch.
