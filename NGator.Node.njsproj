@@ -276,10 +276,8 @@
     <Content Include="public\bower\jquery\LICENSE.txt" />
     <Content Include="public\bower\jquery\README.md" />
     <Content Include="public\bower\jquery\src\.jshintrc" />
-    <Content Include="public\bower\ng-socket\bower.json" />
     <Content Include="public\bower\ng-socket\LICENSE" />
     <Content Include="public\bower\ng-socket\README.md" />
-    <Content Include="public\bower\ngSocket\.bower.json" />
     <Content Include="public\bower\ngSocket\bower.json" />
     <Content Include="public\bower\ngSocket\CONTRIBUTING.md" />
     <Content Include="public\bower\ngSocket\LICENSE" />
@@ -734,7 +732,6 @@
     <Folder Include="public\bower\jquery\src\traversing\" />
     <Folder Include="public\bower\jquery\src\traversing\var\" />
     <Folder Include="public\bower\jquery\src\var\" />
-    <Folder Include="public\bower\ng-socket\" />
     <Folder Include="public\bower\select\" />
     <Folder Include="public\bower\select\demo\" />
     <Folder Include="public\bower\select\dist\" />

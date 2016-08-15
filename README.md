@@ -53,7 +53,7 @@ oj]
 // the macro DELAYIMP_INSECURE_WRITABLE_HOOKS prior to including this header and
 // provide your own non-const definition of the hooks.
 ```
-Tho solve this problem, just add macro ```#define DELAYIMP_INSECURE_WRITABLE_HOOKS``` to your  ```nodejs\node_modules\npm\node_modules\node-gyp\src\win_delay_load_hook.c``` so it should look like this:
+To solve this problem, just add macro ```#define DELAYIMP_INSECURE_WRITABLE_HOOKS``` to your  ```nodejs\node_modules\npm\node_modules\node-gyp\src\win_delay_load_hook.c``` so it should look like this:
 ```C++
 /*
  * When this file is linked to a DLL, it sets up a delay-load hook that
