@@ -16,7 +16,7 @@ export class NewsMailRuParser extends AbstractParser {
         if (tag.name === 'div') {
             if (tag.attributes) {
                 let attr = tag.attributes['class'];
-                if (attr && attr.toString().includes('article__text js-module js-mediator-article')) {
+                if (attr && attr.toString().includes('article__text js-module js-view js-mediator-article')) {
                     this.article = tag;
                 }
             }
@@ -29,6 +29,8 @@ export class NewsMailRuParser extends AbstractParser {
             if (textNode) {
                 let articleText = '';
                 let paragraphs = this.childrenByName(textNode, 'p');
+                let spans = this.childrenByName(textNode, 'span');
+                paragraphs.concat(spans);
                 for (let p of paragraphs) {
                     for (let child of p.children) {
                         if (typeof child === 'string') {

@@ -15,7 +15,7 @@ export class VzRuParser extends AbstractParser {
         if (tag.name === 'div') {
             if (tag.attributes) {
                 let attr = tag.attributes['class'];
-                if (attr && attr.toString().includes('text')) {
+                if (attr && attr.toString().includes('text newtext')) {
                     this.article = tag;
                 }
             }

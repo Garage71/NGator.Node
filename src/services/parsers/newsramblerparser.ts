@@ -17,7 +17,7 @@ export class NewsRamblerRuParser extends AbstractParser {
         if (tag.name === 'div') {
             if (tag.attributes) {
                 let attr = tag.attributes['class'];
-                if (attr && attr.toString().includes('article__column')) {
+                if (attr && attr.toString().includes('article__content j-smart-copy j-data-cluster j-menu__transformer-flag')) {
                     this.article = tag;
                 }
             }
@@ -26,8 +26,10 @@ export class NewsRamblerRuParser extends AbstractParser {
 
     protected onclosetag(tagname: string, currentTag: any): void {
         if (tagname === 'div' && currentTag === this.article) {
-            let paragraphs = this.childrenByName(this.article, 'div');
+            let paragraphs = this.childrenByName(this.article, 'p');
 
+            // deprecated
+            /*
             paragraphs = paragraphs.filter((p) => {
                 if (p.attributes) {
                     let cls = p.attributes['class'];
@@ -37,6 +39,7 @@ export class NewsRamblerRuParser extends AbstractParser {
                 }
                 return false;
             });
+            */
 
             let articleText = '';
             for (let p of paragraphs) {
